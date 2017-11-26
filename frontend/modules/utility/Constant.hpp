@@ -9,7 +9,7 @@ namespace cnoise {
 
 		class Constant : public Module {
 		public:
-			Constant(const int width, const int height, const float value);
+			Constant(const size_t& width, const size_t& height, const float& value);
 
 			virtual size_t GetSourceModuleCount() const override;
 
