@@ -1,7 +1,7 @@
 #pragma once
 #ifndef BASE_H
 #define BASE_H
-#include "../common/CUDA_Include.h"
+
 /*
 	
 	Defines a base module class.
