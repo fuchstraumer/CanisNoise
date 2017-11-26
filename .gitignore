@@ -283,3 +283,5 @@ test/
 img/
 
 backends/cpu/build/
+
+backends/cuda/build/

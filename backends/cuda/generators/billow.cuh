@@ -1,7 +1,7 @@
 #pragma once
 #ifndef BILLOW_CUH
 #define BILLOW_CUH
-#include "../CUDA_Include.h"
+#include "../CUDA_Include.cuh"
 #include "../noise_generators.cuh"
 extern "C" {
 API_CALL void BillowLauncher2D(float* out, int width, int height, noise_t noise_type, float2 origin, float freq, float lacun, float persist, int seed, int octaves);

@@ -2,7 +2,7 @@
 #ifndef SIMPLEX_LUT_CUH
 #define SIMPLEX_LUT_CUH
 
-#include "CUDA_Include.h"
+#include "CUDA_Include.cuh"
 
 
 

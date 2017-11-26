@@ -59,28 +59,4 @@ void AddLauncher(float* output, float* input0, float* input1, const int width, c
 
 void AddLauncher3D(float * output, float * input0, float * input1, const int width, const int height, const int depth){
 
-#ifdef CUDA_KERNEL_TIMING
-	cudaEvent_t start, stop;
-	cudaEventCreate(&start);
-	cudaEventCreate(&stop);
-	cudaEventRecord(start);
-#endif // CUDA_KERNEL_TIMING
-
-	// Setup dimensions of kernel launch using occupancy calculator.
-	dim3 block(16, 16, 1);
-	dim3 grid(width / block.x, height / block.y, depth / block.z);
-	AddKernel3D<<<grid, block >>>(output, input0, input1, width, height);
-	// Check for succesfull kernel launch
-	cudaAssert(cudaGetLastError());
-	// Synchronize device
-	cudaAssert(cudaDeviceSynchronize());
-
-#ifdef CUDA_KERNEL_TIMING
-	cudaEventRecord(stop);
-	cudaEventSynchronize(stop);
-	float elapsed = 0.0f;
-	cudaEventElapsedTime(&elapsed, start, stop);
-	printf("Kernel execution time in ms: %f\n", elapsed);
-#endif // CUDA_KERNEL_TIMING
-
 }

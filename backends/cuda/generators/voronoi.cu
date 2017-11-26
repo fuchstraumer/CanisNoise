@@ -95,7 +95,7 @@ __device__ __constant__ float CELL_2D_Y[256] = {
 
 __device__ float cellular(const float2 p, const float freq, const float displacement, const voronoi_distance_t dist_func, const voronoi_return_t return_t) {
 	int2 ip = make_int2(llrintf(p.x), llrintf(p.y));
-	float dist = FLT_MAX;
+	float dist = 99e9f;
 	switch (dist_func) {
 		case voronoi_distance_t::EUCLIDEAN: {
 			for (int xi = ip.x - 1; xi <= ip.x + 1; ++xi) {

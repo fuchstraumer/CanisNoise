@@ -1,7 +1,7 @@
 #pragma once
 #ifndef SCALEBIAS_CUH
 #define SCALEBIAS_CUH
-#include "../CUDA_Include.h"
+#include "../CUDA_Include.cuh"
 extern "C" {
 API_CALL void scalebiasLauncher(float* output, float* input, const int width, const int height, float scale, float bias);
 }

@@ -1,5 +1,4 @@
 #include "billow.cuh"
-#include "..\..\cpp\modules\generators\Billow.h"
 
 __device__ float billow2D_Simplex(float2 point, float freq, float lacun, float persist, int init_seed, int octaves) {
 	float result = 0.0f;
@@ -150,15 +149,4 @@ void BillowLauncher3D(float* out, const int width, const int height, const int d
 	printf("Kernel execution time in ms: %f\n", elapsed);
 #endif // CUDA_KERNEL_TIMING
 
-}
-
-cnoise::generators::Billow3D::Billow3D(int width, int height, int depth, float x, float y, float z, int seed, float freq, float lacun, int octaves, float persist) : Module3D(width, height, depth), 
-Attributes(seed, freq, lacun, octaves, persist), Origin(make_float3(x,y,z)) {}
-
-size_t cnoise::generators::Billow3D::GetSourceModuleCount() const{
-	return 0;
-}
-
-void cnoise::generators::Billow3D::Generate(){
-	BillowLauncher3D(Output, Dimensions.x, Dimensions.y, Dimensions.z, Origin, Attributes.Frequency, Attributes.Lacunarity, Attributes.Persistence, Attributes.Seed, Attributes.Octaves);
 }

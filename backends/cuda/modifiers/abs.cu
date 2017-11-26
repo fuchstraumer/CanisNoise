@@ -1,5 +1,4 @@
 #include "abs.cuh"
-#include "..\..\cpp\modules\modifiers\Abs.h"
 
 __global__ void absKernel(float* output, float* input, const int width, const int height) {
 	const int i = blockIdx.x * blockDim.x + threadIdx.x;

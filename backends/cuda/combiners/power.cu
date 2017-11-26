@@ -1,5 +1,4 @@
 #include "power.cuh"
-#include "..\..\cpp\modules\combiners\Power.h"
 
 
 __global__ void powerKernel(float* output, float* input0, float* input1, const int width, const int height) {
@@ -26,10 +25,8 @@ void powerLauncher(float* output, float* input0, float* input1, const int width,
 #endif // CUDA_KERNEL_TIMING
 
 	// Setup dimensions of kernel launch using occupancy calculator.
-	int blockSize, minGridSize;
-	cudaOccupancyMaxPotentialBlockSize(&minGridSize, &blockSize, powerKernel, 0, 0); 
-	dim3 block(blockSize, blockSize, 1);
-	dim3 grid((width - 1) / blockSize + 1, (height - 1) / blockSize + 1, 1);
+	dim3 block(16, 16, 1);
+	dim3 grid((width - 1) / 16 + 1, (height - 1) / 16 + 1, 1);
 	powerKernel<<<grid, block >>>(output, input0, input1, width, height); //Call Kernel
 	// Check for successful kernel launch
 	cudaAssert(cudaGetLastError());

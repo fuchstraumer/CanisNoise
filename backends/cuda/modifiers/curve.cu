@@ -62,7 +62,7 @@ __global__ void CurveKernel(float* output, float* input, const int width, const 
 	output[(j * width) + i] = cubicInterp(control_points[i0].OutputVal, control_points[i1].OutputVal, control_points[i2].OutputVal, control_points[i3].OutputVal, alpha);
 }
 
-void CurveLauncher(float* output, float* input, const int width, const int height, std::vector<ControlPoint>& control_points) {
+void CurveLauncher(float* output, float* input, const int width, const int height, const ControlPoint* control_points, const int& num_pts) {
 
 #ifdef CUDA_KERNEL_TIMING
 	cudaEvent_t start, stop;
@@ -73,10 +73,10 @@ void CurveLauncher(float* output, float* input, const int width, const int heigh
 
 	// Setup structs on GPU
 	ControlPoint *device_point_array;
-	cudaMalloc(&device_point_array, control_points.size() * sizeof(ControlPoint));
+	cudaMalloc(&device_point_array, num_pts * sizeof(ControlPoint));
 
 	// Copy structs to GPU
-	cudaMemcpy(device_point_array, &control_points[0], control_points.size() * sizeof(ControlPoint), cudaMemcpyHostToDevice);
+	cudaMemcpy(device_point_array, &control_points[0], num_pts * sizeof(ControlPoint), cudaMemcpyHostToDevice);
 
 	// Setup dimensions of kernel launch using occupancy calculator.
 	//int blockSize, minGridSize;
@@ -84,7 +84,7 @@ void CurveLauncher(float* output, float* input, const int width, const int heigh
 	dim3 block(8, 8, 1);
 	dim3 grid((width - 1) / block.x + 1, (height - 1) / block.y + 1, 1);
 	// Launch kernel.
-	CurveKernel<<<grid, block>>>(output, input, width, height, device_point_array, control_points.size());
+	CurveKernel<<<grid, block>>>(output, input, width, height, device_point_array, num_pts);
 
 	// Check for succesfull kernel launch
 	cudaAssert(cudaGetLastError());

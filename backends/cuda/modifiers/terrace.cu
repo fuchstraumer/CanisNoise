@@ -52,7 +52,7 @@ __global__ void TerraceKernel(float* output, const float* input, const int width
 	return;
 }
 
-void TerraceLauncher(float * output, const float * input, const int width, const int height, const std::vector<float>& pts, bool invert){
+void TerraceLauncher(float * output, const float * input, const int width, const int height, const float* pts, const int& num_Pts, bool invert){
 
 #ifdef CUDA_KERNEL_TIMING
 	cudaEvent_t start, stop;
@@ -66,17 +66,16 @@ void TerraceLauncher(float * output, const float * input, const int width, const
 
 	// Allocate for points and copy them to GPU
 	float* device_pts;
-	err = cudaMalloc(&device_pts, sizeof(float) * pts.size());
+	err = cudaMalloc(&device_pts, sizeof(float) * num_Pts);
 	cudaAssert(err);
-	err = cudaMemcpy(device_pts, &pts[0], sizeof(float) * pts.size(), cudaMemcpyHostToDevice);
+	err = cudaMemcpy(device_pts, &pts[0], sizeof(float) * num_Pts, cudaMemcpyHostToDevice);
 	cudaAssert(err);
 
 	int blockSize, minGridSize;
-	cudaOccupancyMaxPotentialBlockSize(&minGridSize, &blockSize, TerraceKernel, 0, 0); //???
 	dim3 block(blockSize, blockSize, 1);
 	dim3 grid((width - 1) / blockSize + 1, (height - 1) / blockSize + 1, 1);
 	// Launch kernel.
-	TerraceKernel<<<grid, block>>>(output, input, width, height, device_pts, static_cast<int>(pts.size()), invert);
+	TerraceKernel<<<grid, block>>>(output, input, width, height, device_pts, num_Pts, invert);
 	cudaAssert(cudaGetLastError());
 	cudaAssert(cudaDeviceSynchronize());
 
