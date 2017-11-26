@@ -16,6 +16,8 @@ void cnoise::modifiers::Abs::Generate() {
     if (!sourceModules.front()->Generated) {
         sourceModules.front()->Generate();
     }
-    absLauncher(Output, sourceModules.front()->Output, dims.first, dims.second);
+    if (CUDA_LOADED) {     
+        cudaAbsLauncher(GetDataPtr(), sourceModules.front()->GetDataPtr(), dims.first, dims.second);
+    }
     Generated = true;
 }

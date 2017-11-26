@@ -1,4 +1,5 @@
 #include "DecarpientierSwiss.hpp"
+#include "noisegen.hpp"
 #include <algorithm>
 
 inline float dcSwissVal(const float& _x, const float& _y, const float& warp_amt, const noise_t& noise_type, 

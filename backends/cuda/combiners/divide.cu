@@ -21,10 +21,10 @@ __global__ void divideKernelF(float* out, const float* in0, const float& factor,
 void cudaDivideLauncher(float* out, const float* in0, const float* in1, const int& width, const int& height) {
 
     int blockSize, minGridSize;
-    cudaOccupancyMaxPotentialBlockSize(&minGridSize, &blockSize, multiplyKernel, 0, 0); //???
+    cudaOccupancyMaxPotentialBlockSize(&minGridSize, &blockSize, divideKernel, 0, 0);
     dim3 block(blockSize, blockSize, 1);
     dim3 grid((width - 1) / blockSize + 1, (height - 1) / blockSize + 1, 1);
-    divideKernel<<<grid, block>>>(output, in0, in1, width, height);
+    divideKernel<<<grid, block>>>(out, in0, in1, width, height);
     // Check for succesfull kernel launch
     cudaError_t err = cudaGetLastError();
     cudaAssert(err);
@@ -37,10 +37,10 @@ void cudaDivideLauncher(float* out, const float* in0, const float* in1, const in
 void cudaDivideLauncherF(float* out, const float* in0, const float& factor, const int& width, const int& height) {
     
     int blockSize, minGridSize;
-    cudaOccupancyMaxPotentialBlockSize(&minGridSize, &blockSize, multiplyKernel, 0, 0); //???
+    cudaOccupancyMaxPotentialBlockSize(&minGridSize, &blockSize, divideKernelF, 0, 0); 
     dim3 block(blockSize, blockSize, 1);
     dim3 grid((width - 1) / blockSize + 1, (height - 1) / blockSize + 1, 1);
-    divideKernelF<<<grid, block>>>(output, in0, factor, width, height);
+    divideKernelF<<<grid, block>>>(out, in0, factor, width, height);
     // Check for succesfull kernel launch
     cudaError_t err = cudaGetLastError();
     cudaAssert(err);

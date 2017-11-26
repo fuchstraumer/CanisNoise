@@ -51,7 +51,7 @@ namespace cnoise {
 
             auto& cu_struct = std::get<cuda_module_data>(data);
 
-            NormalizeLauncher(norm, cu_struct.data, dims.first, dims.second);
+            cudaNormalizeLauncher(norm, cu_struct.data, dims.first, dims.second);
 
             err = cudaDeviceSynchronize();
             cudaAssert(err);
@@ -91,6 +91,17 @@ namespace cnoise {
         img::ImageWriter out(dims.first, dims.second);
         out.SetRawData(rawData);
         out.WriteTER(name);
+    }
+
+    float* Module::GetDataPtr() {
+        if (CUDA_LOADED) {
+            auto& cu_data = std::get<cuda_module_data>(data);
+            return cu_data.data;
+        }
+        else {
+            auto& cpu_data = std::get<cpu_module_data>(data);
+            return cpu_data.data.data();
+        }
     }
 
     cuda_module_data::cuda_module_data(const size_t & w, const size_t & h) : width(w), height(h) {

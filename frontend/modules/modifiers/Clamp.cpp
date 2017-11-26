@@ -1,5 +1,6 @@
 #include "Clamp.hpp"
 #include "modifiers/clamp.cuh"
+#include "modifiers/clamp.hpp"
 
 cnoise::modifiers::Clamp::Clamp(const size_t& width, const size_t& height, const float& lower_bound = 0.0f, const float& upper_bound = 1.0f, const std::shared_ptr<Module>& source = nullptr) : Module(width, height), lowerBound(lower_bound), upperBound(upper_bound) {
     ConnectModule(source);
@@ -16,8 +17,13 @@ void cnoise::modifiers::Clamp::Generate(){
     if (!sourceModules.front()->Generated) {
         sourceModules.front()->Generate();
     }
-    ClampLauncher(Output, sourceModules.front()->Output, dims.first, dims.second, lowerBound, upperBound);
-    Generated = true;
+    if (CUDA_LOADED) {
+        cudaClampLauncher(GetDataPtr(), sourceModules.front()->GetDataPtr(), dims.first, dims.second, lowerBound, upperBound);
+        Generated = true;
+    }
+    else {
+        cpuClampLauncher()
+    }
 }
 
 float cnoise::modifiers::Clamp::GetLowerBound() const{

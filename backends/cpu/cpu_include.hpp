@@ -7,6 +7,8 @@
 #include <future>
 #include <functional>
 #include <valarray>
+#include "CommonStructs.hpp"
+#include "CommonDef.hpp"
 
 #ifdef BUILDING_DLL
 #define API_CALL __declspec(dllexport)

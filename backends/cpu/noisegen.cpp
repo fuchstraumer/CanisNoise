@@ -123,7 +123,7 @@ float simplex2d(const float& px, const float& py, const int& seed,
     const int g2x = grad_2d_lut[h2][0];
     const int g2y = grad_2d_lut[h2][1];
     
-    float n0, n1, n2, n3;
+    float n0, n1, n2;
 
     float t0 = 0.50f - x0 * x0 - y0 * y0;
     float t0_2, t0_4;

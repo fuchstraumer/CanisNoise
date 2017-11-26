@@ -1,14 +1,15 @@
 #include "RidgedMulti.hpp"
+#include "noisegen.hpp"
 
 inline float ridgedVal(const float& _x, const float& _y, const noise_t& noise_type, const float& freq, const float& lacun, const float& persist,
-    const int& octaves, const int& seed) {
+    const int& octaves, const int& _seed) {
     float result = 0.0f;
     float ampl = 1.0f;
     float x = _x * freq;
     float y = _y * freq;
 
     for(int i = 0; i < octaves; ++i) {
-        int seed = (seed + i) & 0xffffffff;
+        int seed = (_seed + i) & 0xffffffff;
         if (noise_type == noise_t::SIMPLEX) {
             result += (1.0f - simplex2d(x, y, seed)) * ampl;
         }

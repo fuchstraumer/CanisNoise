@@ -78,8 +78,10 @@ namespace cnoise {
 
         // Tells us whether or not this module has already Generated data.
         bool Generated;
-
+        float* GetDataPtr();
     protected:
+
+        
 
         // Dimensions of textures.
         std::pair<size_t, size_t> dims;
