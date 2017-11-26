@@ -1,10 +1,12 @@
-#include "Turbulence.h"
-#include "../cuda/modifiers/turbulence.cuh"
+#include "Turbulence.hpp"
+#include "modifiers/turbulence.cuh"
+#include <iostream>
 namespace cnoise {
 	
 	namespace modifiers {
 
-		Turbulence::Turbulence(int width, int height, noise_t noise_type, Module* prev, int _roughness, int _seed, float _strength, float freq) : Module(width, height), roughness(_roughness), seed(_seed), strength(_strength), frequency(freq) {
+		Turbulence::Turbulence(const size_t& width, const size_t& height, const std::shared_ptr<Module>& prev, const int& _roughness, const int& _seed, const float& _strength, const float& freq) : Module(width, height), 
+            roughness(_roughness), seed(_seed), strength(_strength), frequency(freq) {
 			ConnectModule(prev);
 		}
 
@@ -14,8 +16,7 @@ namespace cnoise {
 
 		void Turbulence::Generate(){
 			if (sourceModules.front() == nullptr) {
-				std::cerr << "Did you forget to set a source module for your turbulence module?" << std::endl;
-				throw("No source module for turbulence module set before attempting to generate results.");
+				throw std::runtime_error("No source module for turbulence module set before attempting to generate results.");
 			}
 			if (!sourceModules.front()->Generated) {
 				sourceModules.front()->Generate();
@@ -24,15 +25,8 @@ namespace cnoise {
 			Generated = true;
 		}
 
-		void Turbulence::SetNoiseType(noise_t _type){
-			noiseType = _type;
-		}
 
-		noise_t Turbulence::GetNoiseType() const{
-			return noiseType;
-		}
-
-		void Turbulence::SetStrength(float _strength){
+		void Turbulence::SetStrength(const float& _strength){
 			strength = _strength;
 		}
 
@@ -48,7 +42,7 @@ namespace cnoise {
 			return seed;
 		}
 
-		void Turbulence::SetRoughness(int _rough) {
+		void Turbulence::SetRoughness(const int& _rough) {
 			roughness = _rough;
 		}
 
@@ -60,7 +54,7 @@ namespace cnoise {
 			return frequency;
 		}
 
-		void Turbulence::SetFrequency(const float _freq){
+		void Turbulence::SetFrequency(const float& _freq){
 			frequency = _freq;
 		}
 

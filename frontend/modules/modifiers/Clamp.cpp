@@ -1,7 +1,7 @@
-#include "Clamp.h"
-#include "../cuda/modifiers/clamp.cuh"
+#include "Clamp.hpp"
+#include "modifiers/clamp.cuh"
 
-cnoise::modifiers::Clamp::Clamp(int width, int height, float lower_bound, float upper_bound, Module * source) : Module(width, height), lowerBound(lower_bound), upperBound(upper_bound) {
+cnoise::modifiers::Clamp::Clamp(const size_t& width, const size_t& height, const float& lower_bound = 0.0f, const float& upper_bound = 1.0f, const std::shared_ptr<Module>& source = nullptr) : Module(width, height), lowerBound(lower_bound), upperBound(upper_bound) {
 	ConnectModule(source);
 }
 
@@ -28,10 +28,10 @@ float cnoise::modifiers::Clamp::GetUpperBound() const{
 	return upperBound;
 }
 
-void cnoise::modifiers::Clamp::SetLowerBound(const float lower){
+void cnoise::modifiers::Clamp::SetLowerBound(const float& lower){
 	lowerBound = lower;
 }
 
-void cnoise::modifiers::Clamp::SetUpperBound(const float upper){
+void cnoise::modifiers::Clamp::SetUpperBound(const float& upper){
 	upperBound = upper;
 }

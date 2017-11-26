@@ -1,7 +1,7 @@
-#include "Terrace.h"
-#include "../cuda/modifiers/terrace.cuh"
+#include "Terrace.hpp"
+#include "modifiers/terrace.cuh"
 
-cnoise::modifiers::Terrace::Terrace(const int width, const int height) : Module(width, height), inverted(false) {}
+cnoise::modifiers::Terrace::Terrace(const size_t& width, const size_t& height) : Module(width, height), inverted(false) {}
 
 void cnoise::modifiers::Terrace::Generate(){
 	if (sourceModules.front() == nullptr || sourceModules.empty()) {
@@ -10,9 +10,9 @@ void cnoise::modifiers::Terrace::Generate(){
 	if (!sourceModules.front()->Generated) {
 		sourceModules.front()->Generate();
 	}
-	std::vector<float> points = GetControlPoints();
+	std::vector<float> points = std::vector<float>(controlPoints.cbegin(), controlPoints.cend());
 	// Launch kernel
-	TerraceLauncher(Output, sourceModules.front()->Output, dims.first, dims.second, points, inverted);
+	TerraceLauncher(Output, sourceModules.front()->Output, dims.first, dims.second, points.data(), static_cast<int>(points.size()), inverted);
 	Generated = true;
 }
 
@@ -26,10 +26,6 @@ void cnoise::modifiers::Terrace::AddControlPoint(const float & val){
 
 void cnoise::modifiers::Terrace::ClearControlPoints(){
 	controlPoints.clear();
-}
-
-std::vector<float> cnoise::modifiers::Terrace::GetControlPoints() const{
-	return std::vector<float>(controlPoints.begin(), controlPoints.end());
 }
 
 void cnoise::modifiers::Terrace::MakeControlPoints(const size_t & num_pts){

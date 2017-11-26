@@ -1,7 +1,7 @@
 #pragma once
 #ifndef TURBULENCE_H
 #define TURBULENCE_H
-#include "../Base.h"
+#include "Base.hpp"
 
 namespace cnoise {
 
@@ -15,42 +15,27 @@ namespace cnoise {
 		class Turbulence : public Module {
 		public:
 
-			Turbulence(int width, int height, noise_t noise_type, Module* prev = nullptr, int roughness = DEFAULT_TURBULENCE_ROUGHNESS, int seed = DEFAULT_TURBULENCE_SEED, float strength = DEFAULT_TURBULENCE_STRENGTH, float freq = DEFAULT_TURBULENCE_FREQUENCY);
+			Turbulence(const size_t& width, const size_t& height, const std::shared_ptr<Module>& prev, const int& roughness, const int& seed, const float& strength, const float& freq);
 
 			virtual size_t GetSourceModuleCount() const override;
 
 			virtual void Generate() override;
 
-			void SetNoiseType(noise_t _type);
-
-			noise_t GetNoiseType() const;
-
-			void SetStrength(float _strength);
-
+			void SetStrength(const float& _strength);
 			float GetStrength() const;
-
 			void SetSeed(int _seed);
-			
 			int GetSeed() const;
-
-			void SetRoughness(int _rough);
-
+			void SetRoughness(const int& _rough);
 			int GetRoughness() const;
-
 			float GetFrequency() const;
-
-			void SetFrequency(const float _freq);
+			void SetFrequency(const float& _freq);
 
 		private:
 
 			float strength;
-
 			float frequency;
-
 			int seed;
-
 			int roughness;
-
 			noise_t noiseType;
 
 		};

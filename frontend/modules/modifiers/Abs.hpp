@@ -1,7 +1,7 @@
 #pragma once
 #ifndef ABS_H
 #define ABS_H
-#include "../Base.h"
+#include "Base.hpp"
 
 namespace cnoise {
 
@@ -10,7 +10,7 @@ namespace cnoise {
 		class Abs : public Module {
 		public:
 
-			Abs(const size_t width, const size_t height, Module* previous);
+			Abs(const size_t& width, const size_t& height, const std::shared_ptr<Module>& previous);
 
 			virtual size_t GetSourceModuleCount() const override;
 

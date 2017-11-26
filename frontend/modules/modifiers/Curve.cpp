@@ -1,14 +1,15 @@
-#include "Curve.h"
-#include "../cuda/modifiers/curve.cuh"
+#include "Curve.hpp"
+#include "modifiers/curve.cuh"
+#include <iostream>
 namespace cnoise {
 
 	namespace modifiers {
 
-		Curve::Curve(int width, int height) : Module(width, height) {}
+		Curve::Curve(const size_t& width, const size_t& height) : Module(width, height) {}
 
-		Curve::Curve(int width, int height, const std::vector<ControlPoint>& init_points) : Module(width, height), controlPoints(init_points) {}
+		Curve::Curve(const size_t& width, const size_t& height, const std::vector<ControlPoint>& init_points) : Module(width, height), controlPoints(init_points) {}
 
-		void Curve::AddControlPoint(float input_val, float output_val){
+		void Curve::AddControlPoint(const float& input_val, const float& output_val){
 			controlPoints.push_back(ControlPoint(input_val, output_val));
 		}
 
@@ -16,7 +17,7 @@ namespace cnoise {
 			return 1;
 		}
 
-		std::vector<ControlPoint> Curve::GetControlPoints() const{
+		const std::vector<ControlPoint>& Curve::GetControlPoints() const{
 			return controlPoints;
 		}
 
@@ -44,7 +45,7 @@ namespace cnoise {
 				sourceModules.front()->Generate();
 			}
 			
-			CurveLauncher(Output, sourceModules.front()->Output, dims.first, dims.second, controlPoints);
+			CurveLauncher(Output, sourceModules.front()->Output, dims.first, dims.second, controlPoints.data(), static_cast<int>(controlPoints.size()));
 			Generated = true;
 		}
 	}

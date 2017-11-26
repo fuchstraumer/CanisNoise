@@ -1,13 +1,13 @@
-#include "ScaleBias.h"
-#include "../cuda/modifiers/scalebias.cuh"
+#include "ScaleBias.hpp"
+#include "modifiers/scalebias.cuh"
 
-cnoise::modifiers::ScaleBias::ScaleBias(const size_t width, const size_t height, const float _scale, const float _bias) : Module(width, height), scale(_scale), bias(_bias){}
+cnoise::modifiers::ScaleBias::ScaleBias(const size_t& width, const size_t& height, const float& _scale, const float& _bias) : Module(width, height), scale(_scale), bias(_bias){}
 
-void cnoise::modifiers::ScaleBias::SetBias(const float _bias){
+void cnoise::modifiers::ScaleBias::SetBias(const float& _bias){
 	bias = _bias;
 }
 
-void cnoise::modifiers::ScaleBias::SetScale(const float _scale){
+void cnoise::modifiers::ScaleBias::SetScale(const float& _scale){
 	scale = _scale;
 }
 

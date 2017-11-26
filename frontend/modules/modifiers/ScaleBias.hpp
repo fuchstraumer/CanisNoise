@@ -1,7 +1,7 @@
 #pragma once
 #ifndef SCALE_BIAS_H
 #define SCALE_BIAS_H
-#include "../Base.h"
+#include "Base.hpp"
 
 namespace cnoise {
 
@@ -10,11 +10,11 @@ namespace cnoise {
 		class ScaleBias : public Module {
 		public:
 
-			ScaleBias(const size_t width, const size_t height, const float _scale, const float _bias);
+			ScaleBias(const size_t& width, const size_t& height, const float& _scale, const float& _bias);
 
-			void SetBias(const float bias);
+			void SetBias(const float& _bias);
 			
-			void SetScale(const float scale);
+			void SetScale(const float& _scale);
 
 			float GetBias() const;
 

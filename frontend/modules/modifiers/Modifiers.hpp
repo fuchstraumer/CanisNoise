@@ -2,11 +2,11 @@
 #ifndef MODIFIERS_H
 #define MODIFIERS_H
 
-#include "Abs.h"
-#include "Clamp.h"
-#include "Curve.h"
-#include "ScaleBias.h"
-#include "Terrace.h"
-#include "Turbulence.h"
+#include "Abs.hpp"
+#include "Clamp.hpp"
+#include "Curve.hpp"
+#include "ScaleBias.hpp"
+#include "Terrace.hpp"
+#include "Turbulence.hpp"
 
 #endif // !MODIFIERS_H

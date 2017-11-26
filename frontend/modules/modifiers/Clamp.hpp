@@ -1,7 +1,7 @@
 #pragma once
 #ifndef CLAMP_H
 #define CLAMP_H
-#include "../Base.h"
+#include "Base.hpp"
 
 namespace cnoise {
 
@@ -10,7 +10,7 @@ namespace cnoise {
 		class Clamp : public Module {
 		public:
 
-			Clamp(int width, int height, float lower_bound = 0.0f, float upper_bound = 1.0f, Module* source = nullptr);
+			Clamp(const size_t& width, const size_t& height, const float& lower_bound, const float& upper_bound, const std::shared_ptr<Module>& source);
 
 			virtual size_t GetSourceModuleCount() const override;
 
@@ -20,9 +20,9 @@ namespace cnoise {
 
 			float GetUpperBound() const;
 
-			void SetLowerBound(const float lower);
+			void SetLowerBound(const float& lower);
 
-			void SetUpperBound(const float upper);
+			void SetUpperBound(const float& upper);
 
 		private:
 

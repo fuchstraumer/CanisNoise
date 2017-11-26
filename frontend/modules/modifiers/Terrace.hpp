@@ -1,7 +1,7 @@
 #pragma once
 #ifndef TERRACE_H
 #define TERRACE_H
-#include "../Base.h"
+#include "Base.hpp"
 #include <set>
 #include <functional>
 
@@ -12,7 +12,7 @@ namespace cnoise {
 		class Terrace : public Module {
 		public:
 
-			Terrace(const int width, const int height);
+			Terrace(const size_t& width, const size_t& height);
 
 			virtual void Generate() override;
 
@@ -23,9 +23,6 @@ namespace cnoise {
 
 			// Empties control points container.
 			void ClearControlPoints();
-
-			// Gets control points. (copying data from set to a vector)
-			std::vector<float> GetControlPoints() const;
 
 			// Fills control points with a uniformly terraced curve, containing "num_pts" quantity
 			// of control points from 0.0 - 1.0

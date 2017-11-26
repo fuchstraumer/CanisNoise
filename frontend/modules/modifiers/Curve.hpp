@@ -1,7 +1,7 @@
 #pragma once
 #ifndef CURVE_H
 #define CURVE_H
-#include "..\Base.h"
+#include "Base.hpp"
 /*
 
 	Modifier module - Curve
@@ -24,18 +24,18 @@ namespace cnoise {
 		public:
 
 			// Doesn't add any control points. Empty constructor.
-			Curve(int width, int height);
+			Curve(const size_t& width, const size_t& height);
 
 			// Adds control points from given vector and makes sure kernel is good to go ASAP
-			Curve(int width, int height, const std::vector<ControlPoint>& init_points);
+			Curve(const size_t& width, const size_t& height, const std::vector<ControlPoint>& init_points);
 
 			// Adds a control point
-			void AddControlPoint(float input_val, float output_val);
+			void AddControlPoint(const float& input_val, const float& output_val);
 
 			virtual size_t GetSourceModuleCount() const override;
 
 			// Get control points (non-mutable)
-			std::vector<ControlPoint> GetControlPoints() const;
+			const std::vector<ControlPoint>& GetControlPoints() const;
 
 			// Set control points
 			void SetControlPoints(const std::vector<ControlPoint>& pts);

@@ -1,7 +1,7 @@
-#include "Abs.h"
-#include "../cuda/modifiers/abs.cuh"
+#include "Abs.hpp"
+#include "modifiers/abs.cuh"
 
-cnoise::modifiers::Abs::Abs(const size_t width, const size_t height, Module * previous) : Module(width, height) {
+cnoise::modifiers::Abs::Abs(const size_t& width, const size_t& height, const std::shared_ptr<Module>& previous) : Module(width, height) {
 	sourceModules.push_back(previous);
 }
 
