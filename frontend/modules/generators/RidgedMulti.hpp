@@ -22,8 +22,7 @@ namespace cnoise {
 			// Width + height specify output texture size.
 			// Seed defines a value to seed the generator with
 			// X & Y define the origin of the noise generator
-			RidgedMulti(int width, int height, noise_t noise_type = noise_t::PERLIN, float x = 0.0f, float y = 0.0f, int seed = DEFAULT_RIDGED_SEED, float freq = DEFAULT_RIDGED_FREQUENCY, float lacun = DEFAULT_RIDGED_LACUNARITY,
-				int octaves = DEFAULT_RIDGED_OCTAVES, float persist = DEFAULT_RIDGED_PERSISTENCE);
+			RidgedMulti(const size_t& width, const size_t& height, const noise_t& noise_type, const float& x, const float& y, const int& seed, const float& freq, const float& lacun, const int& octaves, const float& persist);
 
 			// Get source module count: must be 0, this is a generator and can't have preceding modules.
 			virtual size_t GetSourceModuleCount() const override;

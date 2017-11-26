@@ -5,7 +5,8 @@ namespace cnoise {
 
 	namespace combiners {
 
-		Select::Select(const size_t& width, const size_t& height, const float& low_value, const float& high_value, const float& falloff = 0.15f, const std::shared_ptr<Module>& selector = nullptr, const std::shared_ptr<Module>& subject0 = nullptr, const std::shared_ptr<Module>& subject1 = nullptr) : Module(width, height), lowThreshold(low_value), highThreshold(high_value), falloff(_falloff)  {
+		Select::Select(const size_t& width, const size_t& height, const float& low_value, const float& high_value, const float& _falloff, const std::shared_ptr<Module>& selector, const std::shared_ptr<Module>& subject0, const std::shared_ptr<Module>& subject1) : Module(width, height), 
+            lowThreshold(low_value), highThreshold(high_value), falloff(_falloff)  {
 			sourceModules.resize(3);
 			sourceModules[0] = selector;
 			sourceModules[1] = subject0;
