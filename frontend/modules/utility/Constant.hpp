@@ -1,7 +1,7 @@
 #pragma once
 #ifndef CONSTANT_H
 #define CONSTANT_H
-#include "../Base.h"
+#include "Base.hpp"
 
 namespace cnoise {
 

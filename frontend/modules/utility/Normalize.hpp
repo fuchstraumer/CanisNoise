@@ -1,7 +1,7 @@
 #pragma once
 #ifndef NORMALIZE_H
 #define NORMALIZE_H
-#include "../Base.h"
+#include "Base.hpp"
 
 namespace cnoise {
 
@@ -10,7 +10,7 @@ namespace cnoise {
 		class Normalize : public Module {
 		public:
 
-			Normalize(int width, int height, Module* source = nullptr);
+			Normalize(const size_t& width, const size_t& height, const std::shared_ptr<Module>& source);
 
 			virtual void Generate() override;
 

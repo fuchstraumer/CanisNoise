@@ -1,6 +1,7 @@
-#include "Normalize.h"
-#include "../cuda/utility/normalize.cuh"
-cnoise::utility::Normalize::Normalize(int width, int height, Module * source) : Module(width, height){
+#include "Normalize.hpp"
+#include "utility/normalize.cuh"
+
+cnoise::utility::Normalize::Normalize(const size_t& width, const size_t& height, const std::shared_ptr<Module>& source) : Module(width, height){
 	sourceModules.push_back(source);
 }
 

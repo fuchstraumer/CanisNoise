@@ -1,7 +1,7 @@
 #pragma once
 #ifndef CACHE_H
 #define CACHE_H
-#include "../Base.h"
+#include "Base.hpp"
 
 namespace cnoise {
 
@@ -24,7 +24,7 @@ namespace cnoise {
 		class Cache : public Module {
 		public:
 
-			Cache(int width, int height, Module* source = nullptr);
+			Cache(const size_t& width, const size_t& height, const std::shared_ptr<Module>& source);
 
 			virtual void Generate() override;
 

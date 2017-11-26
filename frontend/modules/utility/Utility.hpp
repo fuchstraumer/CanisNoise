@@ -2,9 +2,9 @@
 #ifndef UTILITY_H
 #define UTILITY_H
 
-#include "Cache.h"
-#include "Checkerboard.h"
-#include "Constant.h"
-#include "Normalize.h"
+#include "Cache.hpp"
+#include "Checkerboard.hpp"
+#include "Constant.hpp"
+#include "Normalize.hpp"
 
 #endif // !UTILITY_H

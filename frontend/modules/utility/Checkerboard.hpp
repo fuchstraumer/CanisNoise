@@ -1,7 +1,7 @@
 #pragma once
 #ifndef CHECKERBOARD_H
 #define CHECKERBOARD_H
-#include "../Base.h"
+#include "Base.hpp"
 
 /*
 
@@ -21,7 +21,7 @@ namespace cnoise {
 		class Checkerboard : public Module {
 		public:
 
-			Checkerboard(const int width, const int height);
+			Checkerboard(const size_t& width, const size_t& height);
 
 			virtual void Generate() override;
 
