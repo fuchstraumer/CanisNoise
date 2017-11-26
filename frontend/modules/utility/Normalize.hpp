@@ -5,20 +5,20 @@
 
 namespace cnoise {
 
-	namespace utility {
+    namespace utility {
 
-		class Normalize : public Module {
-		public:
+        class Normalize : public Module {
+        public:
 
-			Normalize(const size_t& width, const size_t& height, const std::shared_ptr<Module>& source);
+            Normalize(const size_t& width, const size_t& height, const std::shared_ptr<Module>& source);
 
-			virtual void Generate() override;
+            virtual void Generate() override;
 
-			virtual size_t GetSourceModuleCount() const override;
+            virtual size_t GetSourceModuleCount() const override;
 
-		};
+        };
 
-	}
+    }
 
 }
 

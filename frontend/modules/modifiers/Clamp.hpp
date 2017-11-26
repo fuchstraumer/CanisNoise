@@ -5,32 +5,32 @@
 
 namespace cnoise {
 
-	namespace modifiers {
+    namespace modifiers {
 
-		class Clamp : public Module {
-		public:
+        class Clamp : public Module {
+        public:
 
-			Clamp(const size_t& width, const size_t& height, const float& lower_bound, const float& upper_bound, const std::shared_ptr<Module>& source);
+            Clamp(const size_t& width, const size_t& height, const float& lower_bound, const float& upper_bound, const std::shared_ptr<Module>& source);
 
-			virtual size_t GetSourceModuleCount() const override;
+            virtual size_t GetSourceModuleCount() const override;
 
-			virtual void Generate() override;
+            virtual void Generate() override;
 
-			float GetLowerBound() const;
+            float GetLowerBound() const;
 
-			float GetUpperBound() const;
+            float GetUpperBound() const;
 
-			void SetLowerBound(const float& lower);
+            void SetLowerBound(const float& lower);
 
-			void SetUpperBound(const float& upper);
+            void SetUpperBound(const float& upper);
 
-		private:
+        private:
 
-			float lowerBound, upperBound;
+            float lowerBound, upperBound;
 
-		};
+        };
 
-	}
+    }
 
 }
 #endif // !CLAMP_H

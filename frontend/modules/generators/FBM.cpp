@@ -2,21 +2,21 @@
 #include "generators\FBM.cuh"
 
 namespace cnoise {
-	
-	namespace generators {
+    
+    namespace generators {
 
-		// Pass width and height to base class ctor, initialize configuration struct, initialize origin (using initializer list)
-		FBM2D::FBM2D(const size_t& width, const size_t& height, const noise_t noise_type, const float& x, const float& y, const int& seed, const float& freq, const float& lacun, const int& octaves, const float& persist) : Module(width, height), 
-			Attributes(seed, freq, lacun, octaves, persist), Origin(x,y), NoiseType(noise_type) {}
+        // Pass width and height to base class ctor, initialize configuration struct, initialize origin (using initializer list)
+        FBM2D::FBM2D(const size_t& width, const size_t& height, const noise_t noise_type, const float& x, const float& y, const int& seed, const float& freq, const float& lacun, const int& octaves, const float& persist) : Module(width, height), 
+            Attributes(seed, freq, lacun, octaves, persist), Origin(x,y), NoiseType(noise_type) {}
 
-		// TODO: Implement these. Just here so compiler shuts up.
-		size_t FBM2D::GetSourceModuleCount() const{
-			return 0;
-		}
+        // TODO: Implement these. Just here so compiler shuts up.
+        size_t FBM2D::GetSourceModuleCount() const{
+            return 0;
+        }
 
-		void FBM2D::Generate(){
-			FBM_Launcher(Output, dims.first, dims.second, NoiseType, make_float2(Origin.first, Origin.second), Attributes.Frequency, Attributes.Lacunarity, Attributes.Persistence, Attributes.Seed, Attributes.Octaves);
-			Generated = true;
-		}
-	}
+        void FBM2D::Generate(){
+            FBM_Launcher(Output, dims.first, dims.second, NoiseType, make_float2(Origin.first, Origin.second), Attributes.Frequency, Attributes.Lacunarity, Attributes.Persistence, Attributes.Seed, Attributes.Octaves);
+            Generated = true;
+        }
+    }
 }

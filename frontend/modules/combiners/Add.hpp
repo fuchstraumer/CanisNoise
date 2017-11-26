@@ -5,22 +5,22 @@
 
 namespace cnoise {
 
-	namespace combiners {
+    namespace combiners {
 
-		class Add : public Module {
-		public:
+        class Add : public Module {
+        public:
 
-			Add(int width, int height, float add_value, Module* source = nullptr);
+            Add(int width, int height, float add_value, Module* source = nullptr);
 
-			virtual void Generate() override;
+            virtual void Generate() override;
 
-			virtual size_t GetSourceModuleCount() const override;
+            virtual size_t GetSourceModuleCount() const override;
 
-		private: 
+        private: 
 
-		};
+        };
 
-	}
+    }
 
 }
 

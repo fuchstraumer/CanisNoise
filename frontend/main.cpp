@@ -17,7 +17,7 @@ int cuda_supported() {
 
 int main() {
 
-	int img_size_x = 2048;
-	int img_size_y = 1024;
-	
+    int img_size_x = 2048;
+    int img_size_y = 1024;
+    
 }

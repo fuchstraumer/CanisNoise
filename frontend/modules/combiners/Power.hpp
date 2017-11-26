@@ -5,20 +5,20 @@
 
 namespace cnoise {
 
-	namespace combiners {
+    namespace combiners {
 
-		class Power : public Module {
-		public:
+        class Power : public Module {
+        public:
 
-			Power(const size_t& width, const size_t& height, const std::shared_ptr<Module>& in0, const std::shared_ptr<Module>& in1);
+            Power(const size_t& width, const size_t& height, const std::shared_ptr<Module>& in0, const std::shared_ptr<Module>& in1);
 
-			virtual void Generate() override;
+            virtual void Generate() override;
 
-			virtual size_t GetSourceModuleCount() const override;
+            virtual size_t GetSourceModuleCount() const override;
 
-		};
+        };
 
-	}
+    }
 
 }
 

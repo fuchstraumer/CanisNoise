@@ -4,10 +4,10 @@
 
 /*
 
-	CUDA_INCLUDE_H
+    CUDA_INCLUDE_H
 
-	Used for including the required CUDA components in C++.
-	
+    Used for including the required CUDA components in C++.
+    
 */
 #define CUDA_KERNEL_TIMING
 #include <cuda.h>

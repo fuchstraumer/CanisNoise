@@ -5,32 +5,32 @@
 
 namespace cnoise {
 
-	namespace modifiers {
+    namespace modifiers {
 
-		class ScaleBias : public Module {
-		public:
+        class ScaleBias : public Module {
+        public:
 
-			ScaleBias(const size_t& width, const size_t& height, const float& _scale, const float& _bias);
+            ScaleBias(const size_t& width, const size_t& height, const float& _scale, const float& _bias);
 
-			void SetBias(const float& _bias);
-			
-			void SetScale(const float& _scale);
+            void SetBias(const float& _bias);
+            
+            void SetScale(const float& _scale);
 
-			float GetBias() const;
+            float GetBias() const;
 
-			float GetScale() const;
+            float GetScale() const;
 
-			virtual size_t GetSourceModuleCount() const override;
+            virtual size_t GetSourceModuleCount() const override;
 
-			void Generate() override;
+            void Generate() override;
 
-		private:
+        private:
 
-			float bias, scale;
+            float bias, scale;
 
-		};
+        };
 
-	}
+    }
 
 }
 #endif // !SCALE_BIAS_H

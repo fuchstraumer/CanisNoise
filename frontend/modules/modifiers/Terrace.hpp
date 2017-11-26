@@ -7,43 +7,43 @@
 
 namespace cnoise {
 
-	namespace modifiers {
+    namespace modifiers {
 
-		class Terrace : public Module {
-		public:
+        class Terrace : public Module {
+        public:
 
-			Terrace(const size_t& width, const size_t& height);
+            Terrace(const size_t& width, const size_t& height);
 
-			virtual void Generate() override;
+            virtual void Generate() override;
 
-			virtual size_t GetSourceModuleCount() const override;
+            virtual size_t GetSourceModuleCount() const override;
 
-			// Adds control point to container.
-			void AddControlPoint(const float& val);
+            // Adds control point to container.
+            void AddControlPoint(const float& val);
 
-			// Empties control points container.
-			void ClearControlPoints();
+            // Empties control points container.
+            void ClearControlPoints();
 
-			// Fills control points with a uniformly terraced curve, containing "num_pts" quantity
-			// of control points from 0.0 - 1.0
-			void MakeControlPoints(const size_t& num_pts);
+            // Fills control points with a uniformly terraced curve, containing "num_pts" quantity
+            // of control points from 0.0 - 1.0
+            void MakeControlPoints(const size_t& num_pts);
 
-			// Inverts this terrace module.
-			void SetInversion(bool inv);
+            // Inverts this terrace module.
+            void SetInversion(bool inv);
 
-			// Gets inversion status
-			bool GetInversion() const;
+            // Gets inversion status
+            bool GetInversion() const;
 
-		private:
+        private:
 
-			// Control point container. Set is implicitly sorted in ascending order, which is what we want.
-			std::set<float> controlPoints;
+            // Control point container. Set is implicitly sorted in ascending order, which is what we want.
+            std::set<float> controlPoints;
 
-			// Whether or not this module is inverted.
-			bool inverted;
-		};
+            // Whether or not this module is inverted.
+            bool inverted;
+        };
 
-	}
+    }
 
 }
 

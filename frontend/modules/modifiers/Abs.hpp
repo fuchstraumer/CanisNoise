@@ -5,20 +5,20 @@
 
 namespace cnoise {
 
-	namespace modifiers {
+    namespace modifiers {
 
-		class Abs : public Module {
-		public:
+        class Abs : public Module {
+        public:
 
-			Abs(const size_t& width, const size_t& height, const std::shared_ptr<Module>& previous);
+            Abs(const size_t& width, const size_t& height, const std::shared_ptr<Module>& previous);
 
-			virtual size_t GetSourceModuleCount() const override;
+            virtual size_t GetSourceModuleCount() const override;
 
-			void Generate() override;
+            void Generate() override;
 
-		};
+        };
 
-	}
+    }
 
 }
 

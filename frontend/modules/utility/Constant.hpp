@@ -5,17 +5,17 @@
 
 namespace cnoise {
 
-	namespace utility {
+    namespace utility {
 
-		class Constant : public Module {
-		public:
-			Constant(const size_t& width, const size_t& height, const float& value);
+        class Constant : public Module {
+        public:
+            Constant(const size_t& width, const size_t& height, const float& value);
 
-			virtual size_t GetSourceModuleCount() const override;
+            virtual size_t GetSourceModuleCount() const override;
 
-			virtual void Generate() override;
-		};
-	}
+            virtual void Generate() override;
+        };
+    }
 
 }
 
