@@ -47,10 +47,6 @@ enum voronoi_return_t {
 typedef unsigned int uint;
 typedef unsigned char uchar;
 
-typedef struct alignas(sizeof(float)) ControlPoint {
-	float InputVal, OutputVal;
-	ControlPoint(float in, float out) : InputVal(in), OutputVal(out) {}
-} ControlPoint;
 
 
 
