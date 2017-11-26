@@ -1,0 +1,31 @@
+INCLUDE(ExternalProject)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.8 FATAL_ERROR) # needed for cuda compat.
+PROJECT(CANIS_NOISE_FRONTEND)
+
+ADD_SUBDIRECTORY("../backends/cpu" "../backends/cpu/build")
+ADD_SUBDIRECTORY("../backends/cuda" "../backends/cuda/build")
+
+FILE(GLOB COMBINERS "modules/combiners/*.hpp" "modules/combiners/*.cpp")
+FILE(GLOB MODIFIERS "modules/modifiers/*.hpp" "modules/modifiers/*.cpp")
+FILE(GLOB GENERATORS "modules/generators/*.hpp" "modules/generators/*.cpp")
+FILE(GLOB UTILITY "modules/utility/*.hpp" "modules/utility/*.cpp")
+FILE(GLOB BASE "modules/Base.hpp" "modules/Base.cpp")
+FILE(GLOB IMAGE "image/image.hpp" "image/image.cpp")
+
+SOURCE_GROUP("combiners" FILES ${COMBINERS})
+SOURCE_GROUP("modifiers" FILES ${MODIFIERS})
+SOURCE_GROUP("generators" FILES ${GENERATORS})
+SOURCE_GROUP("utility" FILES ${UTILITY})
+SOURCE_GROUP("image" FILES ${IMAGE})
+
+SET(CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_SOURCE_DIR}/ext")
+SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/ext/lib")
+SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/ext/bin")
+
+ADD_EXECUTABLE(CANIS_NOISE_FRONTEND "main.cpp" ${COMBINERS} ${MODIFIERS} ${GENERATORS} 
+                                               ${UTILITY} ${BASE} ${IMAGE})
+
+IF(MSVC)
+    TARGET_COMPILE_OPTIONS(CANIS_NOISE_FRONTEND PRIVATE "/std:c++17")
+ENDIF()
+

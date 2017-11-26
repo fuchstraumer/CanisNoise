@@ -285,3 +285,9 @@ img/
 backends/cpu/build/
 
 backends/cuda/build/
+
+frontend/backends/cpu/build/
+
+frontend/backends/cuda/build/
+
+frontend/build/

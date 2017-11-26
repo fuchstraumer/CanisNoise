@@ -5,7 +5,7 @@
 
 namespace cnoise {
 	
-	Module::Module(int width, int height) : dims(width, height) {
+	Module::Module(const size_t& width, const size_t& height) : dims(width, height) {
 			Generated = false;
 			// Allocate using managed memory, so that CPU/GPU can share a single pointer.
 			// Be sure to call cudaDeviceSynchronize() before accessing Output.
@@ -83,62 +83,6 @@ namespace cnoise {
 			out.WriteTER(name);
 		}
 
-		Module3D::Module3D(int width, int height, int depth) : Dimensions(make_int3(width, height, depth)) {
-			Generated = false;
-			// Allocate using managed memory, so that CPU/GPU can share a single pointer.
-			// Be sure to call cudaDeviceSynchronize() before accessing Output.
-			cudaError_t err = cudaSuccess;
-			err = cudaMallocManaged(&Output, sizeof(float) * width * height * depth);
-			cudaAssert(err);
-
-			// Synchronize device to make sure we can access the Output pointer freely and safely.
-			err = cudaDeviceSynchronize();
-			cudaAssert(err);
-		}
-
-		Module3D::~Module3D(){
-			cudaAssert(cudaDeviceSynchronize());
-			cudaAssert(cudaFree(Output));
-		}
-
-		void Module3D::ConnectModule(Module3D * other){
-			if (sourceModules.size() <= GetSourceModuleCount()) {
-				sourceModules.push_back(other);
-			}
-			else {
-				return;
-			}
-		}
-
-		std::vector<float> Module3D::GetData() const{
-			// Make sure to sync to device before accessing managed memory.
-			cudaAssert(cudaDeviceSynchronize());
-			return std::vector<float>(Output, Output + (Dimensions.x * Dimensions.y * Dimensions.z));
-		}
-
-		std::vector<float> Module3D::GetLayer(size_t idx) const {
-			cudaAssert(cudaDeviceSynchronize());
-			return std::vector<float>(Output + (idx * Dimensions.x * Dimensions.y), Output + (Dimensions.x * Dimensions.y));
-		}
-
-		Module3D* Module3D::GetModule(size_t idx) const{
-			return sourceModules.at(idx);
-		}
-
-		void Module3D::SaveToPNG(const char * name, size_t depth_idx){
-			if (depth_idx < 0 || depth_idx > Dimensions.z) {
-				return;
-			}
-			std::vector<float> slice;
-			slice = GetLayer(depth_idx);
-			img::ImageWriter out(Dimensions.x, Dimensions.y);
-			out.SetRawData(slice);
-			out.WritePNG(name);
-		}
-
-		void Module3D::SaveAllToPNGs(const char* base_name) {
-
-		}
-
+		
 }
 
