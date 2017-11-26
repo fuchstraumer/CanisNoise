@@ -13,8 +13,8 @@ void cpuSelectLauncher(float* out, const float* select_item, const float* input0
                     const int& width, const int& height, const float& lower_bound, const float& upper_bound,
                     const float& falloff) {
 
-    for(int i = 0; i < width; ++i) {
-        for(int j = 0; j < height; ++j) {
+    for(int j = 0; j < height; ++j) {
+        for(int i = 0; i < width; ++i) {  
             const int idx = i + (j * width);
 
             const float& select = select_item[idx];

@@ -2,8 +2,8 @@
 #include <algorithm> 
 
 void cpuTerraceLauncher(float* output, const float* input, const int& width, const int& height, const float* pts, const int& num_pts, const bool& invert) {
-    for(int i = 0; i < width; ++i) {
-        for(int j = 0; j < height; ++j) {
+    for(int j = 0; j < height; ++j) {
+        for(int i = 0; i < width; ++i) {  
 
             int idx;
             for(idx = 0; idx < num_pts; ++idx) {

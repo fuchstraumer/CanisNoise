@@ -15,8 +15,8 @@ constexpr float cubic_interp(const float& n0, const float& n1, const float& n2, 
 }
 
 void cpuCurveLauncher(float* output, const float* input0, const int& width, const int& height, ControlPoint* pts, const int& num_pts) {
-    for(int i = 0; i < width; ++i) {
-        for(int j = 0; j < height; ++j) {
+    for(int j = 0; j < height; ++j) {
+        for(int i = 0; i < width; ++i) {  
             
             int idx;
             for(idx = 0; idx < num_pts; ++idx) {
