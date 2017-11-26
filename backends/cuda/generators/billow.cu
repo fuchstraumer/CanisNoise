@@ -96,7 +96,7 @@ __global__ void Billow3DKernel(float* output, const int width, const int height,
     output[i + (j * width) + (k * width * height)] = val;
 }
 
-void BillowLauncher2D(float* out, int width, int height, noise_t noise_type, float2 origin, float freq, float lacun, float persist, int seed, int octaves) {
+void cudaBillowLauncher2D(float* out, int width, int height, noise_t noise_type, float2 origin, float freq, float lacun, float persist, int seed, int octaves) {
 
 #ifdef CUDA_KERNEL_TIMING
     cudaEvent_t start, stop;

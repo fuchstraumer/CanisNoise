@@ -10,7 +10,7 @@ __global__ void MinKernel(float* output, const float* in0, const float* in1, con
     output[(j * width) + i] = out_val;
 }
 
-void MinLauncher(float* output, const float* in0, const float* in1, const int width, const int height) {
+void cudaMinLauncher(float* output, const float* in0, const float* in1, const int width, const int height) {
 
 #ifdef CUDA_KERNEL_TIMING
     cudaEvent_t start, stop;

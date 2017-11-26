@@ -61,7 +61,7 @@ __global__ void Ridged2DKernel(float* out, int width, int height, noise_t noise_
     
 }
 
-void RidgedMultiLauncher(float* out, int width, int height, noise_t noise_type, float2 origin, float freq, float lacun, float persist, int seed, int octaves) {
+void cudaRidgedMultiLauncher(float* out, int width, int height, noise_t noise_type, float2 origin, float freq, float lacun, float persist, int seed, int octaves) {
 #ifdef CUDA_KERNEL_TIMING
     cudaEvent_t start, stop;
     cudaEventCreate(&start);

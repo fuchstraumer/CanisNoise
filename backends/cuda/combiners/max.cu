@@ -11,7 +11,7 @@ __global__ void MaxKernel(float *output, const float *in0, const float *in1, con
     output[(j * width) + i] = out_val;
 }
 
-void MaxLauncher(float *output, const float *in0, const float *in1, const int width, const int height) {
+void cudaMaxLauncher(float *output, const float *in0, const float *in1, const int width, const int height) {
 
 #ifdef CUDA_KERNEL_TIMING
     cudaEvent_t start, stop;

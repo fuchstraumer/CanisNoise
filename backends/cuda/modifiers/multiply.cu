@@ -10,7 +10,7 @@ __global__ void multiplyKernel(float* output, float* input, const int width, con
     output[(j * width) + i] = input[(j * width) + i] * factor;
 }
 
-void multiplyLauncher(float* output, float* input, const int width, const int height, float factor) {
+void cudaMultiplyLauncher(float* output, float* input, const int width, const int height, float factor) {
 #ifdef CUDA_KERNEL_TIMING
     cudaEvent_t start, stop;
     cudaEventCreate(&start);

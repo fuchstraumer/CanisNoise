@@ -31,7 +31,7 @@ __global__ void AddKernel3D(float* output, float* input0, float* input1, const i
     output[i + (j * width) + (k * width * height)] = prev0 + prev1;
 }
 
-void AddLauncher(float* output, float* input0, float* input1, const int width, const int height){
+void cudaAddLauncher(float* output, float* input0, float* input1, const int width, const int height){
 #ifdef CUDA_KERNEL_TIMING
     cudaEvent_t start, stop;
     cudaEventCreate(&start);

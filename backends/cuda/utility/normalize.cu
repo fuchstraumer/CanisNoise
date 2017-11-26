@@ -14,7 +14,7 @@ __global__ void NormalizeKernel(float* output, const float* input, const int wid
 	output[(j * width) + i] = -1.0f * (input[(j * width) + i] - min) / (min - max);
 }
 
-void NormalizeLauncher(float * output, float * input, const int width, const int height){
+void cudaNormalizeLauncher(float * output, float * input, const int width, const int height){
 
 #ifdef CUDA_KERNEL_TIMING
 	cudaEvent_t start, stop;

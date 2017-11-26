@@ -1,9 +1,0 @@
-{
-    "files.associations": {
-        "*.cuh": "cpp",
-        "system_error": "cpp",
-        "xfunctional": "cpp",
-        "xtr1common": "cpp",
-        "xutility": "cpp"
-    }
-}

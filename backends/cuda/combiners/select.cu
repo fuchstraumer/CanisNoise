@@ -65,7 +65,7 @@ __global__ void SelectKernel(float* out, float* select_item, float* subject0, fl
     out[(j * width) + i] = result;
 }
 
-void SelectLauncher(float* out, float* select_item, float* subject0, float* subject1, int width, int height, float upper_bound, float lower_bound, float falloff){
+void cudaSelectLauncher(float* out, float* select_item, float* subject0, float* subject1, int width, int height, float upper_bound, float lower_bound, float falloff){
 
 #ifdef CUDA_KERNEL_TIMING
     cudaEvent_t start, stop;

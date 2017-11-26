@@ -62,7 +62,7 @@ __global__ void CurveKernel(float* output, float* input, const int width, const 
     output[(j * width) + i] = cubicInterp(control_points[i0].OutputVal, control_points[i1].OutputVal, control_points[i2].OutputVal, control_points[i3].OutputVal, alpha);
 }
 
-void CurveLauncher(float* output, float* input, const int width, const int height, const ControlPoint* control_points, const int& num_pts) {
+void cudaCurveLauncher(float* output, float* input, const int width, const int height, const ControlPoint* control_points, const int& num_pts) {
 
 #ifdef CUDA_KERNEL_TIMING
     cudaEvent_t start, stop;

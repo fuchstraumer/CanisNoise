@@ -75,7 +75,7 @@ __global__ void d_swiss_kernel(float* out, int width, int height, noise_t noise_
     }
 }
 
-void DecarpientierSwissLauncher(float* out, int width, int height, noise_t noise_type, float2 origin, float freq, float lacun, float persist, int seed, int octaves) {
+void cudaDecarpientierSwissLauncher(float* out, int width, int height, noise_t noise_type, float2 origin, float freq, float lacun, float persist, int seed, int octaves) {
 #ifdef CUDA_KERNEL_TIMING
     cudaEvent_t start, stop;
     cudaEventCreate(&start);

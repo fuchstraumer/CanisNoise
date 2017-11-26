@@ -11,7 +11,7 @@ __global__ void scalebiasKernel(float* output, float* input, const int width, co
     output[(j * width) + i] = (input[(j * width) + i] * scale) + bias; // for default value for scale is 1 and bias is 0;
 }
 
-void scalebiasLauncher(float* output, float* input, const int width, const int height, float scale, float bias){
+void cudaScaleBiasLauncher(float* output, float* input, const int width, const int height, float scale, float bias){
 
 #ifdef CUDA_KERNEL_TIMING
     cudaEvent_t start, stop;

@@ -52,7 +52,7 @@ __global__ void TerraceKernel(float* output, const float* input, const int width
     return;
 }
 
-void TerraceLauncher(float * output, const float * input, const int width, const int height, const float* pts, const int& num_Pts, bool invert){
+void cudaTerraceLauncher(float * output, const float * input, const int width, const int height, const float* pts, const int& num_Pts, bool invert){
 
 #ifdef CUDA_KERNEL_TIMING
     cudaEvent_t start, stop;

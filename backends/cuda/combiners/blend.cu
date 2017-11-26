@@ -10,7 +10,7 @@ __global__ void BlendKernel(float *output, const float* in0, const float* in1, c
     output[(j * width) + i] = lerp(in0[(j * width) + i], in1[(j * width) + i], (control[(j * width) + i] + 1.0f) / 2.0f);
 }
 
-void BlendLauncher(float * output, const float * in0, const float * in1, const float * weight, const int width, const int height){
+void cudaBlendLauncher(float * output, const float * in0, const float * in1, const float * weight, const int width, const int height){
 
 #ifdef CUDA_KERNEL_TIMING
     cudaEvent_t start, stop;

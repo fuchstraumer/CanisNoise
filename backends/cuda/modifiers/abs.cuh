@@ -3,6 +3,6 @@
 #define ABS_CUH
 #include "../CUDA_Include.cuh"
 
-API_CALL void absLauncher(float* out, float* in, const int width, const int height);
+API_CALL void cudaAbsLauncher(float* out, float* in, const int width, const int height);
 
 #endif 

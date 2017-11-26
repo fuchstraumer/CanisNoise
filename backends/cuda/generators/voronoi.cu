@@ -115,7 +115,7 @@ __global__ void CellularKernel(cudaSurfaceObject_t out, const int width, const i
     }
 }
 
-void VoronoiLauncher(cudaSurfaceObject_t out, const int width, const int height, const float freq, const float displacement, const voronoi_distance_t dist_func, const voronoi_return_t return_t){
+void cudaVoronoiLauncher(cudaSurfaceObject_t out, const int width, const int height, const float freq, const float displacement, const voronoi_distance_t dist_func, const voronoi_return_t return_t){
 
 #ifdef CUDA_KERNEL_TIMING
     cudaEvent_t start, stop;

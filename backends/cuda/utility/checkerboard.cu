@@ -19,7 +19,7 @@ __global__ void CheckerboardKernel(float* output, const int width, const int hei
 	output[(j * width) + i] = result;
 }
 
-void CheckerboardLauncher(float *output, const int width, const int height) {
+void cudaCheckerboardLauncher(float *output, const int width, const int height) {
 
 #ifdef CUDA_KERNEL_TIMING
 	cudaEvent_t start, stop;

@@ -5,7 +5,7 @@
 
 struct ControlPoint;
 
-API_CALL void CurveLauncher(float* output, const float* input0, 
+API_CALL void cpuCurveLauncher(float* output, const float* input0, 
                             const int& width, const int& height, ControlPoint* pts,
                             const int& num_pts);
 

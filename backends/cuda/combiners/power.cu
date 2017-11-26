@@ -15,7 +15,7 @@ __global__ void powerKernel(float* output, float* input0, float* input1, const i
     output[(j * width) + i] = powf(prev0, prev1);
 }
 
-void powerLauncher(float* output, float* input0, float* input1, const int width, const int height) {
+void cudaPowerLauncher(float* output, float* input0, float* input1, const int width, const int height) {
 
 #ifdef CUDA_KERNEL_TIMING
     cudaEvent_t start, stop;

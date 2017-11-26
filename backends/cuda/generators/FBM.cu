@@ -67,7 +67,7 @@ __global__ void FBM2DKernel(float* out, int width, int height, noise_t noise_typ
     out[(j * width) + i] = val;
 }
 
-void FBM_Launcher(float* out, int width, int height, noise_t noise_type, float2 origin, float freq, float lacun, float persist, int seed, int octaves){
+void cudaFBM_Launcher(float* out, int width, int height, noise_t noise_type, float2 origin, float freq, float lacun, float persist, int seed, int octaves){
 #ifdef CUDA_KERNEL_TIMING
     cudaEvent_t start, stop;
     cudaEventCreate(&start);
