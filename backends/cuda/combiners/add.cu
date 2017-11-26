@@ -44,9 +44,11 @@ void AddLauncher(float* output, float* input0, float* input1, const int width, c
 	dim3 grid((width - 1) / block.x + 1, (height - 1) / block.y + 1, 1);
 	AddKernel<<<grid, block>>>(output, input0, input1, width, height);
 	// Check for succesfull kernel launch
-	cudaAssert(cudaGetLastError());
+	cudaError_t err = cudaGetLastError();
+	cudaAssert(err);
 	// Synchronize device
-	cudaAssert(cudaDeviceSynchronize());
+    cudaError_t err = cudaDeviceSynchronize();
+    cudaAssert(err);
 
 #ifdef CUDA_KERNEL_TIMING
 	cudaEventRecord(stop);

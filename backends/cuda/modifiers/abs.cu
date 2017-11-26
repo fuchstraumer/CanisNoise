@@ -29,7 +29,8 @@ void absLauncher(float* output, float* input, const int width, const int height)
 	// Check for succesfull kernel launch
 	cudaAssert(cudaGetLastError());
 	// Synchronize device
-	cudaAssert(cudaDeviceSynchronize());
+    cudaError_t err = cudaDeviceSynchronize();
+    cudaAssert(err)
 
 #ifdef CUDA_KERNEL_TIMING
 	cudaEventRecord(stop);

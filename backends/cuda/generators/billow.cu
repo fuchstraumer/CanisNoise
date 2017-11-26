@@ -111,7 +111,7 @@ void BillowLauncher2D(float* out, int width, int height, noise_t noise_type, flo
 	// Check for succesfull kernel launch
 	cudaAssert(cudaGetLastError());
 	// Synchronize device
-	cudaAssert(cudaDeviceSynchronize());
+	    cudaError_t err = cudaDeviceSynchronize();
 
 #ifdef CUDA_KERNEL_TIMING
 	cudaEventRecord(stop);
@@ -139,7 +139,8 @@ void BillowLauncher3D(float* out, const int width, const int height, const int d
 	// Check for succesfull kernel launch
 	cudaAssert(cudaGetLastError());
 	// Synchronize device
-	cudaAssert(cudaDeviceSynchronize());
+    cudaError_t err = cudaDeviceSynchronize();
+    cudaAssert(err);
 
 #ifdef CUDA_KERNEL_TIMING
 	cudaEventRecord(stop);

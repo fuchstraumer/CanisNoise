@@ -77,7 +77,8 @@ void TerraceLauncher(float * output, const float * input, const int width, const
 	// Launch kernel.
 	TerraceKernel<<<grid, block>>>(output, input, width, height, device_pts, num_Pts, invert);
 	cudaAssert(cudaGetLastError());
-	cudaAssert(cudaDeviceSynchronize());
+    cudaError_t err = cudaDeviceSynchronize();
+    cudaAssert(err);
 
 	// Free device_pts
 	cudaFree(device_pts);

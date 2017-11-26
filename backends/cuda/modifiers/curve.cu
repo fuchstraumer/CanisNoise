@@ -89,7 +89,8 @@ void CurveLauncher(float* output, float* input, const int width, const int heigh
 	// Check for succesfull kernel launch
 	cudaAssert(cudaGetLastError());
 	// Synchronize device
-	cudaAssert(cudaDeviceSynchronize());
+    cudaError_t err = cudaDeviceSynchronize();
+    cudaAssert(err);
 
 	// Free control points array
 	cudaFree(device_point_array);

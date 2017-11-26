@@ -24,9 +24,11 @@ void MinLauncher(float* output, const float* in0, const float* in1, const int wi
 	dim3 grid(width / block.x, height / block.y, 1);
 	MinKernel<<<grid, block>>>(output, in0, in1, width, height);
 	// Check for succesfull kernel launch
-	cudaAssert(cudaGetLastError());
+    cudaError_t err = cudaGetLastError();
+	cudaAssert(err);
 	// Synchronize device
-	cudaAssert(cudaDeviceSynchronize());
+    err = cudaDeviceSynchronize();
+	cudaAssert(err);
 
 #ifdef CUDA_KERNEL_TIMING
 	cudaEventRecord(stop);

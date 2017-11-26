@@ -25,9 +25,11 @@ void multiplyLauncher(float* output, float* input, const int width, const int he
 	dim3 grid((width - 1) / blockSize + 1, (height - 1) / blockSize + 1, 1);
 	multiplyKernel<<<grid, block>>>(output, input, width, height, factor);
 	// Check for succesfull kernel launch
-	cudaAssert(cudaGetLastError());
+    cudaError_t err = cudaGetLastError();
+	cudaAssert(err);
 	// Synchronize device
-	cudaAssert(cudaDeviceSynchronize());
+	err = cudaDeviceSynchronize();
+    cudaAssert(err);
 
 #ifdef CUDA_KERNEL_TIMING
 	cudaEventRecord(stop);

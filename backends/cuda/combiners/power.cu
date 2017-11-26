@@ -31,7 +31,8 @@ void powerLauncher(float* output, float* input0, float* input1, const int width,
 	// Check for successful kernel launch
 	cudaAssert(cudaGetLastError());
 	// Synchronize device
-	cudaAssert(cudaDeviceSynchronize());
+    cudaError_t err = cudaDeviceSynchronize();
+    cudaAssert(err);
 
 #ifdef CUDA_KERNEL_TIMING
 	cudaEventRecord(stop);

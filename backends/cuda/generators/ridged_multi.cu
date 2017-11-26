@@ -75,9 +75,11 @@ void RidgedMultiLauncher(float* out, int width, int height, noise_t noise_type, 
 	dim3 numBlocks(width / threadsPerBlock.x, height / threadsPerBlock.y);
 	Ridged2DKernel<<<numBlocks, threadsPerBlock>>>(out, width, height, noise_type, origin, freq, lacun, persist, seed, octaves);
 	// Check for succesfull kernel launch
-	cudaAssert(cudaGetLastError());
+    cudaError_t err = cudaGetLastError();
+	cudaAssert(err);
 	// Synchronize device
-	cudaAssert(cudaDeviceSynchronize());
+	err = cudaDeviceSynchronize();
+    cudaAssert(err);
 
 #ifdef CUDA_KERNEL_TIMING
 	cudaEventRecord(stop);

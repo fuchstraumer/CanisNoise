@@ -25,9 +25,11 @@ void scalebiasLauncher(float* output, float* input, const int width, const int h
 	dim3 grid((width - 1) / block.x + 1, (height - 1) / block.y + 1, 1);
 	scalebiasKernel<<<grid, block>>>(output, input, width, height, scale, bias);
 	// Check for succesfull kernel launch
-	cudaAssert(cudaGetLastError());
+    cudaError_t err = cudaGetLastError();
+    cudaAssert(err);
 	// Synchronize device
-	cudaAssert(cudaDeviceSynchronize());
+	err = cudaDeviceSynchronize();
+    cudaAssert(err);
 
 #ifdef CUDA_KERNEL_TIMING
 	cudaEventRecord(stop);

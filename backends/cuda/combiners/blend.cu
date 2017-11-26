@@ -24,9 +24,11 @@ void BlendLauncher(float * output, const float * in0, const float * in1, const f
 	dim3 grid(width / block.x, height / block.y, 1);
 	BlendKernel<<<grid,block>>>(output, in0, in1, weight, width, height);
 	// Check for succesfull kernel launch
-	cudaAssert(cudaGetLastError());
+    cudaError_t err = cudaGetLastError();
+	cudaAssert(err);
 	// Synchronize device
-	cudaAssert(cudaDeviceSynchronize());
+    err = cudaDeviceSynchronize();
+    cudaAssert(err);
 
 #ifdef CUDA_KERNEL_TIMING
 	cudaEventRecord(stop);

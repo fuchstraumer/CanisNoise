@@ -79,9 +79,10 @@ void SelectLauncher(float* out, float* select_item, float* subject0, float* subj
 	dim3 grid(width / block.x, height / block.y, 1);
 	SelectKernel<<<grid, block>>>(out, select_item, subject0, subject1, width, height, upper_bound, lower_bound, falloff);
 	// Check for succesfull kernel launch
-	cudaAssert(cudaGetLastError());
-	// Synchronize device
-	cudaAssert(cudaDeviceSynchronize());
+    cudaError_t err = cudaGetLastError();
+    cudaAssert(err);
+    err = cudaDeviceSynchronize();
+    cudaAssert(err);
 
 #ifdef CUDA_KERNEL_TIMING
 	cudaEventRecord(stop);
