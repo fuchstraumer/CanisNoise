@@ -23,7 +23,7 @@ __global__ void ClampKernel(float* output, float* input, const int width, const 
 
 }
 
-void ClampLauncher(float* output, float* input, const int width, const int height, const float lower_value, const float upper_value) {
+void cudaClampLauncher(float* output, float* input, const int width, const int height, const float lower_value, const float upper_value) {
 
 #ifdef CUDA_KERNEL_TIMING
     cudaEvent_t start, stop;

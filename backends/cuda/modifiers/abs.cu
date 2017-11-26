@@ -11,7 +11,7 @@ __global__ void absKernel(float* output, float* input, const int width, const in
     output[(j * width) + i] = (prev <= 0.0f) ? -prev : prev;
 }
 
-void absLauncher(float* output, float* input, const int width, const int height) {
+void cudaAbsLauncher(float* output, float* input, const int width, const int height) {
 
 #ifdef CUDA_KERNEL_TIMING
     cudaEvent_t start, stop;
