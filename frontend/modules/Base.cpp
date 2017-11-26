@@ -9,45 +9,39 @@ namespace cnoise {
             Generated = false;
             // Allocate using managed memory, so that CPU/GPU can share a single pointer.
             // Be sure to call cudaDeviceSynchronize() before accessing Output.
-            cudaError_t err = cudaSuccess;
-            err = cudaMallocManaged(&Output, sizeof(float) * width * height);
-            cudaAssert(err);
-
-            // Synchronize device to make sure we can access the Output pointer freely and safely.
-            err = cudaDeviceSynchronize();
-            cudaAssert(err);
-        }
-
-        Module::~Module() {
-            cudaError_t err = cudaSuccess;
-            // Synchronize device to make sure its not doing anything with the elements we wish to destroy
-            err = cudaDeviceSynchronize();
-            cudaAssert(err);
-            // Free managed memory.
-            err = cudaFree(Output);
-            cudaAssert(err);
-        }
-
-        void Module::ConnectModule(const std::shared_ptr<Module>& other) {
-            if (sourceModules.size() < GetSourceModuleCount()) {
-                sourceModules.push_back(other);
+            if (CUDA_LOADED) {
+                data = cuda_module_data(width, height);
             }
-        }
+            else {
+                data = cpu_module_data(width, height);
+            }
+  
+    }
 
-        std::vector<float> Module::GetData() const{
-            // Make sure to sync device before trying to get data.
-            auto err = cudaDeviceSynchronize();
-            cudaAssert(err);
-            std::vector<float> result(Output, Output + (dims.first * dims.second));
-            return result;
+    void Module::ConnectModule(const std::shared_ptr<Module>& other) {
+        if (sourceModules.size() < GetSourceModuleCount()) {
+            sourceModules.push_back(other);
         }
+    }
 
-        Module& Module::GetModule(size_t idx) const {
-            // .at(idx) has bounds checking in debug modes, iirc.
-            return *sourceModules.at(idx);
+    std::vector<float> Module::GetData() const{
+        if (CUDA_LOADED) {
+            auto& cu_struct = std::get<cuda_module_data>(data);
+            return cu_struct.GetData();
         }
+        else {
+            auto& cpu_struct = std::get<cpu_module_data>(data);
+            return cpu_struct.data;
+        }
+    }
 
-        std::vector<float> Module::GetDataNormalized(float upper_bound, float lower_bound) const {
+    Module& Module::GetModule(size_t idx) const {
+        // .at(idx) has bounds checking in debug modes, iirc.
+        return *sourceModules.at(idx);
+    }
+
+    std::vector<float> Module::GetDataNormalized(float upper_bound, float lower_bound) const {
+        if (CUDA_LOADED) {
             cudaError_t err = cudaDeviceSynchronize();
             err = cudaDeviceSynchronize();
             cudaAssert(err);
@@ -55,7 +49,9 @@ namespace cnoise {
             err = cudaMallocManaged(&norm, dims.first * dims.second * sizeof(float));
             cudaAssert(err);
 
-            NormalizeLauncher(norm, Output, dims.first, dims.second);
+            auto& cu_struct = std::get<cuda_module_data>(data);
+
+            NormalizeLauncher(norm, cu_struct.data, dims.first, dims.second);
 
             err = cudaDeviceSynchronize();
             cudaAssert(err);
@@ -64,35 +60,81 @@ namespace cnoise {
             cudaFree(norm);
             return std::move(result);
         }
+        else {
 
-        void Module::SaveToPNG(const char * name){
-            std::vector<float> rawData = GetData();
-            img::ImageWriter out(dims.first, dims.second);
-            out.SetRawData(rawData);
-            out.WritePNG(name);
         }
+    }
+    
+    void Module::SaveToPNG(const char * name){
+        std::vector<float> rawData = GetData();
+        img::ImageWriter out(dims.first, dims.second);
+        out.SetRawData(rawData);
+        out.WritePNG(name);
+    }
 
-        void Module::SaveToPNG_16(const char * filename) {
-            std::vector<float> raw = GetData();
-            img::ImageWriter out(dims.first, dims.second);
-            out.SetRawData(raw);
-            out.WritePNG_16(filename);
+    void Module::SaveToPNG_16(const char * filename) {
+        std::vector<float> raw = GetData();
+        img::ImageWriter out(dims.first, dims.second);
+        out.SetRawData(raw);
+        out.WritePNG_16(filename);
+    }
+
+    void Module::SaveRaw32(const char* filename) {
+        std::vector<float> raw = GetData();
+        img::ImageWriter out(dims.first, dims.second);
+        out.SetRawData(raw);
+        out.WriteRaw32(filename);
+    }
+
+    void Module::SaveToTER(const char * name) {
+        std::vector<float> rawData = GetData();
+        img::ImageWriter out(dims.first, dims.second);
+        out.SetRawData(rawData);
+        out.WriteTER(name);
+    }
+
+    cuda_module_data::cuda_module_data(const size_t & w, const size_t & h) : width(w), height(h) {
+        auto err = cudaMallocManaged(&data, sizeof(float) * width * height);
+        cudaAssert(err);
+        err = cudaDeviceSynchronize();
+        cudaAssert(err);
+    }
+
+    cuda_module_data::cuda_module_data(cuda_module_data && other) noexcept {
+        data = std::move(other.data);
+        width = std::move(other.width);
+        height = std::move(other.height);
+        other.data = nullptr;
+    }
+
+    cuda_module_data & cuda_module_data::operator=(cuda_module_data && other) noexcept {
+        data = std::move(other.data);
+        other.data = nullptr;
+        width = std::move(other.width);
+        height = std::move(other.height);
+        return *this;
+    }
+
+    cuda_module_data::~cuda_module_data() {
+        if (data != nullptr) {
+            auto err = cudaDeviceSynchronize();
+            cudaAssert(err);
+            err = cudaFree(data);
+            cudaAssert(err);
         }
+    }
 
-        void Module::SaveRaw32(const char* filename) {
-            std::vector<float> raw = GetData();
-            img::ImageWriter out(dims.first, dims.second);
-            out.SetRawData(raw);
-            out.WriteRaw32(filename);
-        }
+    std::vector<float> cuda_module_data::GetData() const noexcept {
+        // Make sure to sync device before trying to get data.
+        auto err = cudaDeviceSynchronize();
+        cudaAssert(err);
+        std::vector<float> result(data, data + (width * height));
+        return result;
+    }
 
-        void Module::SaveToTER(const char * name) {
-            std::vector<float> rawData = GetData();
-            img::ImageWriter out(dims.first, dims.second);
-            out.SetRawData(rawData);
-            out.WriteTER(name);
-        }
+    cpu_module_data::cpu_module_data(const size_t & w, const size_t & h) : width(w), height(h) {
+        data.resize(w * h);
+    }
 
-        
 }
 
