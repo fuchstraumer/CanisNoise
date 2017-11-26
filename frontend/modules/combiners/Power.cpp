@@ -1,7 +1,7 @@
-#include "Power.h"
-#include "../cuda/combiners/power.cuh"
+#include "Power.hpp"
+#include "combiners/power.cuh"
 
-cnoise::combiners::Power::Power(const int width, const int height, Module * in0, Module * in1) : Module(width, height){
+cnoise::combiners::Power::Power(const size_t& width, const size_t& height, const std::shared_ptr<Module>& in0, const std::shared_ptr<Module>& in1) : Module(width, height){
 	sourceModules.push_back(in0);
 	sourceModules.push_back(in1);
 }

@@ -1,7 +1,7 @@
 #pragma once
 #ifndef SELECT_H
 #define SELECT_H
-#include "..\Base.h"
+#include "Base.hpp"
 
 namespace cnoise {
 
@@ -30,13 +30,13 @@ namespace cnoise {
 		public:
 
 			// The falloff value does not have to be set at all. The Modules MUST be set eventually, but don't need to be set upon initialization.
-			Select(int width, int height, float low_value, float high_value, float falloff = 0.15f, Module* selector = nullptr, Module* subject0 = nullptr, Module* subject1 = nullptr);
+			Select(const size_t& width, const size_t& height, const float& low_value, const float& high_value, const float& falloff, const std::shared_ptr<Module>& selector, const std::shared_ptr<Module>& subject0, const std::shared_ptr<Module>& subject1);
 
 			// Set subject module
-			void SetSubject(size_t idx, Module* subject);
+			void SetSubject(const size_t& idx, const std::shared_ptr<Module>& subject);
 
 			// Set selector module
-			void SetSelector(Module* selector);
+			void SetSelector(const std::shared_ptr<Module>& selector);
 
 			// SourceModule count = 3
 			virtual size_t GetSourceModuleCount() const override;

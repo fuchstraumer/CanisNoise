@@ -1,7 +1,7 @@
 #pragma once
 #ifndef MAX_H
 #define MAX_H
-#include "../Base.h"
+#include "Base.hpp"
 
 namespace cnoise {
 
@@ -10,7 +10,7 @@ namespace cnoise {
 		class Max : public Module {
 		public:
 
-			Max(const int width, const int height, Module* in0 = nullptr, Module* in1 = nullptr);
+			Max(const size_t& width, const size_t& height, const std::shared_ptr<Module>& in0, const std::shared_ptr<Module>& in1);
 
 			virtual void Generate() override;
 

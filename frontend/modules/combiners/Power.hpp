@@ -1,7 +1,7 @@
 #pragma once
 #ifndef POWER_H
 #define POWER_H
-#include "../Base.h"
+#include "Base.hpp"
 
 namespace cnoise {
 
@@ -10,7 +10,7 @@ namespace cnoise {
 		class Power : public Module {
 		public:
 
-			Power(const int width, const int height, Module* in0, Module* in1);
+			Power(const size_t& width, const size_t& height, const std::shared_ptr<Module>& in0, const std::shared_ptr<Module>& in1);
 
 			virtual void Generate() override;
 

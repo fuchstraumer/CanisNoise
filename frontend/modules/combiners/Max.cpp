@@ -1,7 +1,7 @@
-#include "Max.h"
-#include "../cuda/combiners/max.cuh"
+#include "Max.hpp"
+#include "combiners/max.cuh"
 
-cnoise::combiners::Max::Max(const int width, const int height, Module * in0, Module * in1) : Module(width, height) {
+cnoise::combiners::Max::Max(const size_t& width, const size_t& height, const std::shared_ptr<Module>& in0 = nullptr, const std::shared_ptr<Module>& in1 = nullptr) : Module(width, height) {
 	sourceModules.push_back(in0);
 	sourceModules.push_back(in1);
 }

@@ -1,7 +1,7 @@
 #pragma once
 #ifndef BLEND_H
 #define BLEND_H
-#include "../Base.h"
+#include "Base.hpp"
 
 namespace cnoise {
 
@@ -10,15 +10,15 @@ namespace cnoise {
 		class Blend : public Module {
 		public:
 
-			Blend(const int width, const int height, Module* in0 = nullptr, Module* in1 = nullptr, Module* weight_module = nullptr);
+			Blend(const size_t& width, const size_t& height, const std::shared_ptr<Module>& in0, const std::shared_ptr<Module>& in1, const std::shared_ptr<Module>& weight_module);
 
 			virtual void Generate() override;
 
 			virtual size_t GetSourceModuleCount() const override;
 
-			void SetSourceModule(const int idx, Module* source);
+			void SetSourceModule(const size_t& idx, const std::shared_ptr<Module>& source);
 
-			void SetControlModule(Module* control);
+			void SetControlModule(const std::shared_ptr<Module>& control);
 
 		};
 

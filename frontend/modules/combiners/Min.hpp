@@ -1,7 +1,7 @@
 #pragma once
 #ifndef MIN_H
 #define MIN_H
-#include "../Base.h"
+#include "Base.hpp"
 
 namespace cnoise {
 
@@ -10,7 +10,7 @@ namespace cnoise {
 		class Min : public Module {
 		public:
 
-			Min(const int width, const int height, Module* in0, Module* in1);
+			Min(const size_t& width, const size_t& height, const std::shared_ptr<Module>& in0, const std::shared_ptr<Module>& in1);
 
 			virtual void Generate() override;
 

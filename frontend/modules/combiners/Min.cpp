@@ -1,7 +1,7 @@
-#include "Min.h"
-#include "../cuda/combiners/min.cuh"
+#include "Min.hpp"
+#include "combiners/min.cuh"
 
-cnoise::combiners::Min::Min(const int width, const int height, Module * in0, Module * in1) : Module(width, height) {
+cnoise::combiners::Min::Min(const size_t& width, const size_t& height, const std::shared_ptr<Module>& in0, const std::shared_ptr<Module>& in1) : Module(width, height) {
 	sourceModules.push_back(in0);
 	sourceModules.push_back(in1);
 }

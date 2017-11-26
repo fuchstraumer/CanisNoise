@@ -1,7 +1,7 @@
 #pragma once
 #ifndef ADD_H
 #define ADD_H
-#include "../Base.h"
+#include "Base.hpp"
 
 namespace cnoise {
 

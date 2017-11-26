@@ -1,11 +1,14 @@
-#include "Add.h"
-#include "../cuda/combiners/add.cuh"
+#include "Add.hpp"
+#include <iostream>
+
+#include "combiners/add.cuh"
+
 namespace cnoise {
 
 	namespace combiners {
 
 		Add::Add(int width, int height, float add_value, Module* source) : Module(width, height) {
-			sourceModules.front() = source;
+			sourceModules.front() = std::shared_ptr<Module>(source);
 		}
 
 		void Add::Generate(){
