@@ -2,10 +2,10 @@
 #ifndef GENERATORS_H
 #define GENERATORS_H
 
-#include "Billow.h"
-#include "DecarpientierSwiss.h"
-#include "FBM.h"
-#include "RidgedMulti.h"
-#include "Voronoi.h"
+#include "Billow.hpp"
+#include "DecarpientierSwiss.hpp"
+#include "FBM.hpp"
+#include "RidgedMulti.hpp"
+#include "Voronoi.hpp"
 
 #endif // !GENERATORS_H

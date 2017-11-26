@@ -1,7 +1,7 @@
 #pragma once
 #ifndef DECARPIENTIER_SWISS_H
 #define DECARPIENTIER_SWISS_H
-#include "../Base.h"
+#include "Base.hpp"
 
 namespace cnoise {
 
@@ -22,8 +22,7 @@ namespace cnoise {
 			// Width + height specify output texture size.
 			// Seed defines a value to seed the generator with
 			// X & Y define the origin of the noise generator
-			DecarpientierSwiss(int width, int height, noise_t noise_type = noise_t::PERLIN, float x = 0.0f, float y = 0.0f, int seed = DEFAULT_DC_SWISS_SEED, float freq = DEFAULT_DC_SWISS_FREQUENCY, float lacun = DEFAULT_DC_SWISS_LACUNARITY,
-				int octaves = DEFAULT_DC_SWISS_OCTAVES, float persist = DEFAULT_DC_SWISS_PERSISTENCE);
+			DecarpientierSwiss(const size_t& width, const size_t& height, const noise_t& noise_type, const float& x, const float& y, const int& seed, const float& freq, const float& lacun, const int& octaves, const float& persist);
 
 			// Get source module count: must be 0, this is a generator and can't have preceding modules.
 			virtual size_t GetSourceModuleCount() const override;

@@ -1,4 +1,4 @@
-#include "Voronoi.h"
+#include "Voronoi.hpp"
 
 
 namespace cnoise {

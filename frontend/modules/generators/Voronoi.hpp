@@ -1,7 +1,7 @@
 #pragma once
 #ifndef VORONOI_H
 #define VORONOI_H
-#include "../Base.h"
+#include "Base.hpp"
 
 
 namespace cnoise {

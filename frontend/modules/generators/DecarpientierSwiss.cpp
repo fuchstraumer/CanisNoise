@@ -1,8 +1,7 @@
-#include "DecarpientierSwiss.h"
-#include "../cuda/generators/decarpientier_swiss.cuh"
+#include "DecarpientierSwiss.hpp"
+#include "generators/decarpientier_swiss.cuh"
 
-cnoise::generators::DecarpientierSwiss::DecarpientierSwiss(int width, int height, noise_t noise_type, float x, float y, int seed, float freq, float lacun,
-	int octaves, float persist) : Module(width, height), Attributes(seed, freq, lacun, octaves, persist), Origin(x, y), NoiseType(noise_type){}
+cnoise::generators::DecarpientierSwiss::DecarpientierSwiss(const size_t& width, const size_t& height, const noise_t& noise_type, const float& x, const float& y, const int& seed, const float& freq, const float& lacun, const int& octaves, const float& persist) : Module(width, height), Attributes(seed, freq, lacun, octaves, persist), Origin(x, y), NoiseType(noise_type){}
 
 size_t cnoise::generators::DecarpientierSwiss::GetSourceModuleCount() const{
 	return 0;

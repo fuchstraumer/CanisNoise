@@ -1,7 +1,7 @@
 #pragma once
 #ifndef RIDGED_MULTI_H
 #define RIDGED_MULTI_H
-#include "../Base.h"
+#include "Base.hpp"
 
 namespace cnoise {
 

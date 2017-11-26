@@ -1,7 +1,7 @@
 #pragma once
 #ifndef BILLOW_H
 #define BILLOW_H
-#include "..\Base.h"
+#include "Base.hpp"
 
 namespace cnoise {
 
@@ -24,8 +24,7 @@ namespace cnoise {
 				// Width + height specify output texture size.
 				// Seed defines a value to seed the generator with
 				// X & Y define the origin of the noise generator
-				Billow2D(int width, int height, noise_t noise_type = noise_t::PERLIN, float x = 0.0f, float y = 0.0f, int seed = DEFAULT_BILLOW_SEED, float freq = DEFAULT_BILLOW_FREQUENCY, float lacun = DEFAULT_BILLOW_LACUNARITY,
-					int octaves = DEFAULT_BILLOW_OCTAVES, float persist = DEFAULT_BILLOW_PERSISTENCE);
+				Billow2D(const size_t& width, const size_t& height, const noise_t& noise_type, const float& x, const float& y, const int& seed, const float& freq, const float& lacun, const int& octaves, const float& persist);
 
 				// Get source module count: must be 0, this is a generator and can't have preceding modules.
 				virtual size_t GetSourceModuleCount() const override;
@@ -44,6 +43,7 @@ namespace cnoise {
 
 			};
 
+            /*
 			class Billow3D : public Module3D {
 			public:
 
@@ -69,7 +69,7 @@ namespace cnoise {
 				noise_t NoiseType;
 
 			};
-
+            */
 		}
 
 }

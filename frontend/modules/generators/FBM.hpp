@@ -1,8 +1,8 @@
 #pragma once
 #ifndef FBM_H
 #define FBM_H
-#include "../Base.h"
-#include "../common/CUDA_Include.h"
+#include "Base.hpp"
+
 /*
 
 	Generates values using FBM noise. Ctor includes desired dimensions
