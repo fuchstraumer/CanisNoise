@@ -4,10 +4,11 @@
 
 #include "../cpu_include.hpp"
 
-struct control_point_t;
+struct ControlPoint;
 
+extern "C" {
 API_CALL void CurveLauncher(float* output, const float* input0, 
-                            const int& width, const int& height, control_point_t* pts,
+                            const int& width, const int& height, ControlPoint* pts,
                             const int& num_pts);
-
+}
 #endif //!CPU_CURVE_HPP

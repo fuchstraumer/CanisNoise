@@ -3,7 +3,7 @@
 #define CPU_MINUS_HPP
 
 #include "../cpu_include.hpp"
-
+extern "C" {
 API_CALL void MinusLauncher(float* output, const float* input0, const float* input1, const int width, const int height);
-
+}
 #endif //!CPU_MINUS_HPP
