@@ -6,12 +6,7 @@
 #ifdef NDEBUG
 #define cudaAssert(expression) (expression)
 #else
-
-// Runtime error-checker
-
-
 #define cudaAssert(expression) { cudaErrCheck((expression), __FILE__, __LINE__); }
-
 inline void cudaErrCheck(cudaError_t err, const char* file, unsigned line, bool abort = true) {
 	if (err != cudaSuccess) {
 		fprintf(stderr, "cudaAssert: error %s at %s, Line %d \n", cudaGetErrorString(err), file, line);
@@ -20,7 +15,5 @@ inline void cudaErrCheck(cudaError_t err, const char* file, unsigned line, bool 
 		}
 	}
 }
-
 #endif // NDEBUG
-
 #endif // !CUDA_ASSERT_H

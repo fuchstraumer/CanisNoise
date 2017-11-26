@@ -1,8 +1,9 @@
-// LodePNG is used to handle saving PNG images.
-#include "lodepng\lodepng.h"
-#include "Image.h"
+#include "Image.hpp"
 #include <algorithm>
 #include <xmmintrin.h>
+#include <immintrin.h>
+#include <fstream>
+#include <iostream>
 
 namespace cnoise {
 
@@ -176,12 +177,12 @@ namespace cnoise {
 			if (compression_level == 0) {
 				// Saves uncompressed image using "pixelData" to "filename"
 				unsigned err;
-				err = lodepng::encode(filename, &pixelData[0], width, height);
+				//err = lodepng::encode(filename, &pixelData[0], width, height);
 				if (!err) {
 					return;
 				}
 				else {
-					std::cout << "Error encoding image, code " << err << ": " << lodepng_error_text(err) << std::endl;
+					//std::cout << "Error encoding image, code " << err << ": " << lodepng_error_text(err) << std::endl;
 				}
 			}
 			else {

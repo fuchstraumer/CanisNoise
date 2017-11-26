@@ -1,7 +1,7 @@
-#include "Base.h"
+#include "Base.hpp"
 #include "cuda_assert.h"
-#include "../image/Image.h"
-#include "../cuda/utility/normalize.cuh"
+#include "../image/Image.hpp"
+#include "utility/normalize.cuh"
 
 namespace cnoise {
 	
@@ -28,7 +28,7 @@ namespace cnoise {
 			cudaAssert(err);
 		}
 
-		void Module::ConnectModule(Module* other) {
+		void Module::ConnectModule(const std::shared_ptr<Module>& other) {
 			if (sourceModules.size() < GetSourceModuleCount()) {
 				sourceModules.push_back(other);
 			}
@@ -36,7 +36,8 @@ namespace cnoise {
 
 		std::vector<float> Module::GetData() const{
 			// Make sure to sync device before trying to get data.
-			cudaAssert(cudaDeviceSynchronize());
+			auto err = cudaDeviceSynchronize();
+            cudaAssert(err);
 			std::vector<float> result(Output, Output + (dims.first * dims.second));
 			return result;
 		}
@@ -46,13 +47,22 @@ namespace cnoise {
 			return *sourceModules.at(idx);
 		}
 
-		std::vector<float> Module::GetDataNormalized(float upper_bound, float lower_bound) const{
-			cudaAssert(cudaDeviceSynchronize());
+		std::vector<float> Module::GetDataNormalized(float upper_bound, float lower_bound) const {
+            cudaError_t err = cudaDeviceSynchronize();
+            err = cudaDeviceSynchronize();
+			cudaAssert(err);
 			float* norm;
-			cudaAssert(cudaMallocManaged(&norm, dims.first * dims.second * sizeof(float)));
+			err = cudaMallocManaged(&norm, dims.first * dims.second * sizeof(float));
+            cudaAssert(err);
+
 			NormalizeLauncher(norm, Output, dims.first, dims.second);
-			cudaAssert(cudaDeviceSynchronize());
-			return std::vector<float>(norm, norm + (dims.first * dims.second));
+
+            err = cudaDeviceSynchronize();
+            cudaAssert(err);
+
+            auto result = std::vector<float>(norm, norm + (dims.first * dims.second));
+            cudaFree(norm);
+			return std::move(result);
 		}
 
 		void Module::SaveToPNG(const char * name){

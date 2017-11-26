@@ -16,7 +16,8 @@
 	commands to create the final object.
 
 */
-
+#include "CommonStructs.hpp"
+#include "CommonDef.hpp"
 
 namespace cnoise {
 
@@ -28,11 +29,13 @@ namespace cnoise {
 			Module& operator=(Module&& other) = delete;
 		public:
 
+            static bool CUDA_LOADED;
+            static bool VULKAN_LOADED;
 
 			Module(const size_t& width, const size_t& height);
 			virtual ~Module();
 
-			virtual void ConnectModule(std::shared_ptr<Module>& other);
+			virtual void ConnectModule(const std::shared_ptr<Module>& other);
 			virtual void Generate() = 0;
 
 
