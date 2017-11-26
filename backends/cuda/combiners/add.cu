@@ -47,7 +47,7 @@ void AddLauncher(float* output, float* input0, float* input1, const int width, c
 	cudaError_t err = cudaGetLastError();
 	cudaAssert(err);
 	// Synchronize device
-    cudaError_t err = cudaDeviceSynchronize();
+    err = cudaDeviceSynchronize();
     cudaAssert(err);
 
 #ifdef CUDA_KERNEL_TIMING
