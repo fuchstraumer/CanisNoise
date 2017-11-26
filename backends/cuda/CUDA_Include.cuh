@@ -1,7 +1,7 @@
 #pragma once
 #ifndef CUDA_INCLUDE_H
 #define CUDA_INCLUDE_H
-#include "CommonInclude.h"
+
 /*
 
 	CUDA_INCLUDE_H
@@ -17,7 +17,7 @@
 #include <vector_types.h>
 #include <vector_functions.h>
 #include <device_functions.h>
-#include "../cuda/cuda_assert.h"
+#include "cuda_assert.h"
 
 #ifdef BUILDING_DLL
 #define API_CALL __declspec(dllexport)

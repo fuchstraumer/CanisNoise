@@ -1,3 +1,4 @@
+#pragma once
 /*
 * Copyright 1993-2009 NVIDIA Corporation.  All rights reserved.
 *

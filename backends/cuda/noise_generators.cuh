@@ -1,6 +1,7 @@
+#pragma once
 #ifndef NOISE_GENERATORS_CUH
 #define NOISE_GENERATORS_CUH
-#include "../common/CUDA_Include.h"
+#include "CUDA_Include.h"
 #include "cutil_math.cuh"
 /*
 	
