@@ -9,7 +9,7 @@ float lerp_s(const float& n0, const float& n1, const float& a) {
     return ((1.0f - a) * n0) + (a * n1);
 }
 
-void SelectLauncher(float* out, const float* select_item, const float* input0, const float* input1, 
+void cpuSelectLauncher(float* out, const float* select_item, const float* input0, const float* input1, 
                     const int& width, const int& height, const float& lower_bound, const float& upper_bound,
                     const float& falloff) {
 

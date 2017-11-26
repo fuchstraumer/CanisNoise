@@ -1,7 +1,7 @@
 #include "terrace.hpp"
 #include <algorithm> 
 
-void TerraceLauncher(float* output, const float* input, const int& width, const int& height, const float* pts, const int& num_pts, const bool& invert) {
+void cpuTerraceLauncher(float* output, const float* input, const int& width, const int& height, const float* pts, const int& num_pts, const bool& invert) {
     for(int i = 0; i < width; ++i) {
         for(int j = 0; j < height; ++j) {
 

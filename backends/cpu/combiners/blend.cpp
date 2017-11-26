@@ -1,6 +1,6 @@
 #include "blend.hpp"
 
-void BlendLauncher(float* output, const float* input0, const float* input1, const float* control, 
+void cpuBlendLauncher(float* output, const float* input0, const float* input1, const float* control, 
                    const int& width, const int& height) {
     for(int i = 0; i < width; ++i) {
         for(int j = 0; j < height; ++j) {

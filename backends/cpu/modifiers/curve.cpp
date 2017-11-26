@@ -14,7 +14,7 @@ constexpr float cubic_interp(const float& n0, const float& n1, const float& n2, 
     return p * a * a * a + p * a * a + r * a + n1;
 }
 
-void CurveLauncher(float* output, const float* input0, const int& width, const int& height, ControlPoint* pts, const int& num_pts) {
+void cpuCurveLauncher(float* output, const float* input0, const int& width, const int& height, ControlPoint* pts, const int& num_pts) {
     for(int i = 0; i < width; ++i) {
         for(int j = 0; j < height; ++j) {
             
