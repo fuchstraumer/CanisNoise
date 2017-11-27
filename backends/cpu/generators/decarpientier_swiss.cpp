@@ -1,4 +1,4 @@
-#include "DecarpientierSwiss.hpp"
+#include "decarpientier_swiss.hpp"
 #include "noisegen.hpp"
 #include <algorithm>
 

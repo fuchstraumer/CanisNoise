@@ -4,7 +4,7 @@
 
 #include "cpu_include.hpp"
 
-void cpuDecarpientierSwissLauncher(float* out, const int& width, const int& height, const noise_t& noise_type, const float& warp_amt, 
+API_CALL void cpuDecarpientierSwissLauncher(float* out, const int& width, const int& height, const noise_t& noise_type, const float& warp_amt, 
     const float& origin_x, const float& origin_y, const float& freq, const float& lacun, const float& persist, const int& octaves, const int& seed);
 
 

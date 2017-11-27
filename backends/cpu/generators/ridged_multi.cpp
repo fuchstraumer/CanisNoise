@@ -1,4 +1,4 @@
-#include "RidgedMulti.hpp"
+#include "ridged_multi.hpp"
 #include "noisegen.hpp"
 
 inline float ridgedVal(const float& _x, const float& _y, const noise_t& noise_type, const float& freq, const float& lacun, const float& persist,
