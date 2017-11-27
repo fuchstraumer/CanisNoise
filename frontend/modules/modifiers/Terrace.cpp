@@ -1,18 +1,22 @@
 #include "Terrace.hpp"
 #include "modifiers/terrace.cuh"
+#include "modifiers/terrace.hpp"
+#include <cassert>
 
 cnoise::modifiers::Terrace::Terrace(const size_t& width, const size_t& height) : Module(width, height), inverted(false) {}
 
 void cnoise::modifiers::Terrace::Generate(){
-    if (sourceModules.front() == nullptr || sourceModules.empty()) {
-        throw;
-    }
-    if (!sourceModules.front()->Generated) {
-        sourceModules.front()->Generate();
-    }
+    checkSourceModules();
     std::vector<float> points = std::vector<float>(controlPoints.cbegin(), controlPoints.cend());
-    // Launch kernel
-    TerraceLauncher(Output, sourceModules.front()->Output, dims.first, dims.second, points.data(), static_cast<int>(points.size()), inverted);
+    assert(!points.empty());
+
+    if (CUDA_LOADED) {
+        cudaTerraceLauncher(GetDataPtr(), sourceModules.front()->GetDataPtr(), static_cast<int>(dims.first), static_cast<int>(dims.second), points.data(), static_cast<int>(points.size()), inverted);
+    }
+    else {
+        cpuTerraceLauncher(GetDataPtr(), sourceModules[0]->GetDataPtr(), static_cast<int>(dims.first), static_cast<int>(dims.second), points.data(), static_cast<int>(points.size()), inverted);
+    }
+
     Generated = true;
 }
 

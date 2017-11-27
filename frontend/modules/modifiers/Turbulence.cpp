@@ -1,5 +1,6 @@
 #include "Turbulence.hpp"
 #include "modifiers/turbulence.cuh"
+#include "modifiers/turbulence.hpp"
 #include <iostream>
 namespace cnoise {
     
@@ -15,13 +16,15 @@ namespace cnoise {
         }
 
         void Turbulence::Generate(){
-            if (sourceModules.front() == nullptr) {
-                throw std::runtime_error("No source module for turbulence module set before attempting to generate results.");
+            checkSourceModules();
+
+            if (CUDA_LOADED) {
+                cudaTurbulenceLauncher(GetDataPtr(), sourceModules.front()->GetDataPtr(), static_cast<int>(dims.first), static_cast<int>(dims.second), noiseType, roughness, seed, strength, frequency);
             }
-            if (!sourceModules.front()->Generated) {
-                sourceModules.front()->Generate();
+            else {
+                cpuTurbulenceLauncher(GetDataPtr(), sourceModules[0]->GetDataPtr(), static_cast<int>(dims.first), static_cast<int>(dims.second), roughness, seed, strength, frequency);
             }
-            TurbulenceLauncher(Output, sourceModules.front()->Output, dims.first, dims.second, noiseType, roughness, seed, strength, frequency);
+
             Generated = true;
         }
 

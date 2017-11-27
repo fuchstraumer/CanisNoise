@@ -1,6 +1,7 @@
 #include "Billow.hpp"
-#include <vector_types.h>
 #include "generators/billow.cuh"
+#include "generators/billow.hpp"
+#include <vector_types.h>
 
 namespace cnoise {
 
@@ -14,7 +15,12 @@ namespace cnoise {
             }
 
             void Billow2D::Generate() {
-                BillowLauncher2D(Output, dims.first, dims.second, NoiseType, make_float2(Origin.first, Origin.second), Attributes.Frequency, Attributes.Lacunarity, Attributes.Persistence, Attributes.Seed, Attributes.Octaves);
+                if (CUDA_LOADED) {
+                    cudaBillowLauncher2D(GetDataPtr(), static_cast<int>(dims.first), static_cast<int>(dims.second), NoiseType, make_float2(Origin.first, Origin.second), Attributes.Frequency, Attributes.Lacunarity, Attributes.Persistence, Attributes.Seed, Attributes.Octaves);
+                }
+                else {
+                    cpuBillowLauncher(GetDataPtr(), static_cast<int>(dims.first), static_cast<int>(dims.second), NoiseType, Origin.first, Origin.second, Attributes.Frequency, Attributes.Lacunarity, Attributes.Persistence, Attributes.Octaves, Attributes.Seed);
+                }
                 Generated = true;
             }
 

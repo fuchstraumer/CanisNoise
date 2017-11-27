@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "combiners/add.cuh"
+#include "combiners/add.hpp"
 
 namespace cnoise {
 
@@ -12,18 +13,15 @@ namespace cnoise {
         }
 
         void Add::Generate(){
-            // Make sure all modules in source modules container are generated. (and that there are no null module connections)
-            for (const auto& module : sourceModules) {
-                if (module == nullptr) {
-                    std::cerr << "Did you forget to attach a source module(s) to your add module?" << std::endl;
-                    throw("No source module(s) for Add module, abort");
-                }
-                if (!module->Generated) {
-                    module->Generate();
-                }
-            }
+            checkSourceModules();
             
-            AddLauncher(Output, sourceModules[0]->Output, sourceModules[1]->Output, dims.first, dims.second);
+            if (CUDA_LOADED) {
+                cudaAddLauncher(GetDataPtr(), sourceModules[0]->GetDataPtr(), sourceModules[1]->GetDataPtr(), static_cast<int>(dims.first), static_cast<int>(dims.second));
+            }
+            else {
+                cpuAddLauncher(GetDataPtr(), sourceModules.front()->GetDataPtr(), sourceModules[1]->GetDataPtr(), static_cast<int>(dims.first), static_cast<int>(dims.second));
+            }
+
             Generated = true;
         }
 

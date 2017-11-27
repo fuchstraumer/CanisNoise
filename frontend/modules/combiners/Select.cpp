@@ -1,6 +1,8 @@
 #include "Select.hpp"
 #include <iostream>
-#include "combiners\select.cuh"
+#include "combiners/select.cuh"
+#include "combiners/select.hpp"
+
 namespace cnoise {
 
     namespace combiners {
@@ -28,20 +30,15 @@ namespace cnoise {
         }
 
         void Select::Generate() {
+            checkSourceModules();
 
-            // Make sure modules are connected
-            if (sourceModules[0] == nullptr || sourceModules[1] == nullptr || sourceModules[2] == nullptr) {
-                throw;
+            if (CUDA_LOADED) {
+                cudaSelectLauncher(GetDataPtr(), sourceModules[0]->GetDataPtr(), sourceModules[1]->GetDataPtr(), sourceModules[2]->GetDataPtr(), static_cast<int>(dims.first), static_cast<int>(dims.second), highThreshold, lowThreshold, falloff);
+            }
+            else {
+                cpuSelectLauncher(GetDataPtr(), sourceModules[0]->GetDataPtr(), sourceModules[1]->GetDataPtr(), sourceModules[2]->GetDataPtr(), static_cast<int>(dims.first), static_cast<int>(dims.second), highThreshold, lowThreshold, falloff);
             }
 
-            // Make sure all source modules are generated.
-            for (const auto& module : sourceModules) {
-                if (!module->Generated) {
-                    module->Generate();
-                }
-            }
-
-            SelectLauncher(Output, sourceModules[0]->Output, sourceModules[1]->Output, sourceModules[2]->Output, dims.first, dims.second, highThreshold, lowThreshold, falloff);
             Generated = true;
         }
 

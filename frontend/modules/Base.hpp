@@ -54,7 +54,7 @@ namespace cnoise {
         static bool VULKAN_LOADED;
 
         Module(const size_t& width, const size_t& height);
-        virtual ~Module();
+        virtual ~Module() {};
 
         virtual void ConnectModule(const std::shared_ptr<Module>& other);
         virtual void Generate() = 0;
@@ -79,9 +79,17 @@ namespace cnoise {
         // Tells us whether or not this module has already Generated data.
         bool Generated;
         float* GetDataPtr();
+
+        const size_t& Width() const noexcept;
+        const size_t& Height() const noexcept;
+
+        const auto& GetVariant() const noexcept {
+            return data;
+        }
+
     protected:
 
-        
+        void checkSourceModules();
 
         // Dimensions of textures.
         std::pair<size_t, size_t> dims;

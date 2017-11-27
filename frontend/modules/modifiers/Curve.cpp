@@ -1,5 +1,6 @@
 #include "Curve.hpp"
 #include "modifiers/curve.cuh"
+#include "modifiers/curve.hpp"
 #include <iostream>
 namespace cnoise {
 
@@ -32,20 +33,13 @@ namespace cnoise {
         }
 
         void Curve::Generate(){
-            if (controlPoints.empty()) {
-                std::cerr << "Data unprepared in a Curve module, and control point vector empty! Exiting." << std::endl;
-                throw("NOISE::MODULES::MODIFIER::CURVE:L103: Control points vector empty.");
+            checkSourceModules();
+            if (CUDA_LOADED) {
+                cudaCurveLauncher(GetDataPtr(), sourceModules.front()->GetDataPtr(), static_cast<int>(dims.first), static_cast<int>(dims.second), controlPoints.data(), static_cast<int>(controlPoints.size()));
             }
-            if (sourceModules.front() == nullptr) {
-                std::cerr << "Did you forget to attach a module for curving to this curve module?" << std::endl;
-                throw("NOISE::MODULES::MODIFIER::CURVE:L32: No source module connected.");
+            else {
+                cpuCurveLauncher(GetDataPtr(), sourceModules[0]->GetDataPtr(), static_cast<int>(dims.first), static_cast<int>(dims.second), controlPoints.data(), static_cast<int>(controlPoints.size()));
             }
-            
-            if (!sourceModules.front()->Generated) {
-                sourceModules.front()->Generate();
-            }
-            
-            CurveLauncher(Output, sourceModules.front()->Output, dims.first, dims.second, controlPoints.data(), static_cast<int>(controlPoints.size()));
             Generated = true;
         }
     }

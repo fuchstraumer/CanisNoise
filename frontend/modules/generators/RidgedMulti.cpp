@@ -1,5 +1,7 @@
 #include "RidgedMulti.hpp"
 #include "generators/ridged_multi.cuh"
+#include "generators/ridged_multi.hpp"
+
 namespace cnoise {
 
     namespace generators {
@@ -13,7 +15,12 @@ namespace cnoise {
         }
 
         void RidgedMulti::Generate(){
-            RidgedMultiLauncher(Output, dims.first, dims.second, NoiseType, make_float2(Origin.first, Origin.second), Attributes.Frequency, Attributes.Lacunarity, Attributes.Persistence, Attributes.Seed, Attributes.Octaves);
+            if (CUDA_LOADED) {
+                cudaRidgedMultiLauncher(GetDataPtr(), dims.first, dims.second, NoiseType, make_float2(Origin.first, Origin.second), Attributes.Frequency, Attributes.Lacunarity, Attributes.Persistence, Attributes.Seed, Attributes.Octaves);
+            }
+            else {
+                cpuRidgedMultiLauncher(GetDataPtr(), dims.first, dims.second, NoiseType, Origin.first, Origin.second, Attributes.Frequency, Attributes.Lacunarity, Attributes.Persistence, Attributes.Octaves, Attributes.Seed);
+            }
             Generated = true;
         }
 

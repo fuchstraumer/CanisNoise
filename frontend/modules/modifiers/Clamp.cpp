@@ -11,19 +11,21 @@ size_t cnoise::modifiers::Clamp::GetSourceModuleCount() const{
 }
 
 void cnoise::modifiers::Clamp::Generate(){
-    if (sourceModules.front() == nullptr) {
-        throw;
+    
+    if (Generated) {
+        return;
     }
-    if (!sourceModules.front()->Generated) {
-        sourceModules.front()->Generate();
-    }
+
+    checkSourceModules();
+
     if (CUDA_LOADED) {
-        cudaClampLauncher(GetDataPtr(), sourceModules.front()->GetDataPtr(), dims.first, dims.second, lowerBound, upperBound);
-        Generated = true;
+        cudaClampLauncher(GetDataPtr(), sourceModules.front()->GetDataPtr(), static_cast<int>(dims.first), static_cast<int>(dims.second), lowerBound, upperBound);
     }
     else {
-        cpuClampLauncher()
+        cpuClampLauncher(GetDataPtr(), sourceModules[0]->GetDataPtr(), lowerBound, upperBound, static_cast<int>(dims.first), static_cast<int>(dims.second));
     }
+
+    Generated = true;
 }
 
 float cnoise::modifiers::Clamp::GetLowerBound() const{

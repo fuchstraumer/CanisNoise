@@ -12,7 +12,7 @@ void cnoise::utility::Normalize::Generate(){
     if (!sourceModules.front()->Generated) {
         sourceModules.front()->Generate();
     }
-    NormalizeLauncher(Output, sourceModules.front()->Output, dims.first, dims.second);
+    //NormalizeLauncher(Output, sourceModules.front()->Output, dims.first, dims.second);
     Generated = true;
 }
 

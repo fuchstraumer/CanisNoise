@@ -1,5 +1,6 @@
 #include "Power.hpp"
 #include "combiners/power.cuh"
+#include "combiners/power.hpp"
 
 cnoise::combiners::Power::Power(const size_t& width, const size_t& height, const std::shared_ptr<Module>& in0, const std::shared_ptr<Module>& in1) : Module(width, height){
     sourceModules.push_back(in0);
@@ -7,15 +8,15 @@ cnoise::combiners::Power::Power(const size_t& width, const size_t& height, const
 }
 
 void cnoise::combiners::Power::Generate(){
-    for (const auto& m : sourceModules) {
-        if (m == nullptr) {
-            throw;
-        }
-        if (!m->Generated) {
-            m->Generate();
-        }
+    checkSourceModules();
+
+    if (CUDA_LOADED) {
+        cudaPowerLauncher(GetDataPtr(), sourceModules[0]->GetDataPtr(), sourceModules[1]->GetDataPtr(), static_cast<int>(dims.first), static_cast<int>(dims.second));
     }
-    powerLauncher(Output, sourceModules[0]->Output, sourceModules[1]->Output, dims.first, dims.second);
+    else {
+        cpuPowerLauncher(GetDataPtr(), sourceModules[0]->GetDataPtr(), sourceModules[1]->GetDataPtr(), static_cast<int>(dims.first), static_cast<int>(dims.second));
+    }
+
     Generated = true;
 }
 

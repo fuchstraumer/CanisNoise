@@ -1,5 +1,6 @@
 #include "Min.hpp"
 #include "combiners/min.cuh"
+#include "combiners/min.hpp"
 
 cnoise::combiners::Min::Min(const size_t& width, const size_t& height, const std::shared_ptr<Module>& in0, const std::shared_ptr<Module>& in1) : Module(width, height) {
     sourceModules.push_back(in0);
@@ -7,15 +8,15 @@ cnoise::combiners::Min::Min(const size_t& width, const size_t& height, const std
 }
 
 void cnoise::combiners::Min::Generate(){
-    for (const auto m : sourceModules) {
-        if (m == nullptr) {
-            throw;
-        }
-        if (!m->Generated) {
-            m->Generate();
-        }
+    checkSourceModules();
+
+    if (CUDA_LOADED) {
+        cudaMinLauncher(GetDataPtr(), sourceModules[0]->GetDataPtr(), sourceModules[1]->GetDataPtr(), static_cast<int>(dims.first), static_cast<int>(dims.second));
     }
-    MinLauncher(Output, sourceModules[0]->Output, sourceModules[1]->Output, dims.first, dims.second);
+    else {
+        cpuMinLauncher(GetDataPtr(), sourceModules[0]->GetDataPtr(), sourceModules[1]->GetDataPtr(), static_cast<int>(dims.first), static_cast<int>(dims.second));
+    }
+
     Generated = true;
 }
 

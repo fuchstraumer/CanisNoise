@@ -6,23 +6,26 @@ cnoise::utility::Cache::Cache(const size_t& width, const size_t& height, const s
 }
 
 void cnoise::utility::Cache::Generate(){
-    if (sourceModules.front() == nullptr) {
-        throw;
+    checkSourceModules();
+
+    if (CUDA_LOADED) {
+        auto err = cudaDeviceSynchronize();
+        cudaAssert(err);
+
+        err = cudaMemcpy(GetDataPtr(), sourceModules.front()->GetDataPtr(), sizeof(float) * sourceModules[0]->Width() * sourceModules[0]->Height(),  cudaMemcpyDefault);
+        cudaAssert(err);
+
+        err = cudaDeviceSynchronize();
+        cudaAssert(err);
     }
-    if (!sourceModules.front()->Generated) {
-        sourceModules.front()->Generate();
+    else {
+        // can do simple copy with CPU data.
+        const cpu_module_data& cpu_data = std::get<cpu_module_data>(sourceModules.front()->GetVariant());
+        this->data = cpu_data;
     }
-
-    auto err = cudaDeviceSynchronize();
-    cudaAssert(err);
-
-    err = cudaMemcpy(Output, sourceModules.front()->Output, sizeof(sourceModules.front()->Output), cudaMemcpyDefault);
-    cudaAssert(err);
-
-    err = cudaDeviceSynchronize();
-    cudaAssert(err);
 
     // Data copied, remove our reference to the shared pointer
+    // this way it'll hopefully be freed
     sourceModules.front().reset();
     sourceModules.clear();
     sourceModules.shrink_to_fit();

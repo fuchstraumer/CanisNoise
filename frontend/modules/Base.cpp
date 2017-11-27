@@ -4,6 +4,9 @@
 #include "utility/normalize.cuh"
 
 namespace cnoise {
+
+    bool Module::CUDA_LOADED = false;
+    bool Module::VULKAN_LOADED = false;
     
     Module::Module(const size_t& width, const size_t& height) : dims(width, height) {
             Generated = false;
@@ -51,7 +54,7 @@ namespace cnoise {
 
             auto& cu_struct = std::get<cuda_module_data>(data);
 
-            cudaNormalizeLauncher(norm, cu_struct.data, dims.first, dims.second);
+            //cudaNormalizeLauncher(norm, cu_struct.data, static_cast<int>(dims.first), static_cast<int>(dims.second));
 
             err = cudaDeviceSynchronize();
             cudaAssert(err);
@@ -67,28 +70,28 @@ namespace cnoise {
     
     void Module::SaveToPNG(const char * name){
         std::vector<float> rawData = GetData();
-        img::ImageWriter out(dims.first, dims.second);
+        img::ImageWriter out(static_cast<int>(dims.first), static_cast<int>(dims.second));
         out.SetRawData(rawData);
         out.WritePNG(name);
     }
 
     void Module::SaveToPNG_16(const char * filename) {
         std::vector<float> raw = GetData();
-        img::ImageWriter out(dims.first, dims.second);
+        img::ImageWriter out(static_cast<int>(dims.first), static_cast<int>(dims.second));
         out.SetRawData(raw);
         out.WritePNG_16(filename);
     }
 
     void Module::SaveRaw32(const char* filename) {
         std::vector<float> raw = GetData();
-        img::ImageWriter out(dims.first, dims.second);
+        img::ImageWriter out(static_cast<int>(dims.first), static_cast<int>(dims.second));
         out.SetRawData(raw);
         out.WriteRaw32(filename);
     }
 
     void Module::SaveToTER(const char * name) {
         std::vector<float> rawData = GetData();
-        img::ImageWriter out(dims.first, dims.second);
+        img::ImageWriter out(static_cast<int>(dims.first), static_cast<int>(dims.second));
         out.SetRawData(rawData);
         out.WriteTER(name);
     }
@@ -101,6 +104,25 @@ namespace cnoise {
         else {
             auto& cpu_data = std::get<cpu_module_data>(data);
             return cpu_data.data.data();
+        }
+    }
+
+    const size_t & Module::Width() const noexcept {
+        return dims.first;
+    }
+
+    const size_t & Module::Height() const noexcept {
+        return dims.second;
+    }
+
+    void Module::checkSourceModules() {
+        for (const auto m : sourceModules) {
+            if (m == nullptr) {
+                throw std::runtime_error("Source module in sourceModules was nullptr!");
+            }
+            if (!m->Generated) {
+                m->Generate();
+            }
         }
     }
 
