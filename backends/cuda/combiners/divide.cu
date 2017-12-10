@@ -34,18 +34,14 @@ void cudaDivideLauncher(float* out, const float* in0, const float* in1, const in
 
 }
 
-void cudaDivideLauncherF(float* out, const float* in0, const float& factor, const int& width, const int& height) {
-    
+void cudaDivideLauncherF(float* out, const float* in0, const float& factor, const int& width, const int& height) { 
     int blockSize, minGridSize;
     cudaOccupancyMaxPotentialBlockSize(&minGridSize, &blockSize, divideKernelF, 0, 0); 
     dim3 block(blockSize, blockSize, 1);
     dim3 grid((width - 1) / blockSize + 1, (height - 1) / blockSize + 1, 1);
     divideKernelF<<<grid, block>>>(out, in0, factor, width, height);
-    // Check for succesfull kernel launch
     cudaError_t err = cudaGetLastError();
     cudaAssert(err);
-    // Synchronize device
     err = cudaDeviceSynchronize();
-    cudaAssert(err);
-    
+    cudaAssert(err);  
 }

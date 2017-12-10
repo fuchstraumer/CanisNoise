@@ -12,15 +12,6 @@ __global__ void MaxKernel(float *output, const float *in0, const float *in1, con
 }
 
 void cudaMaxLauncher(float *output, const float *in0, const float *in1, const int width, const int height) {
-
-#ifdef CUDA_KERNEL_TIMING
-    cudaEvent_t start, stop;
-    cudaEventCreate(&start);
-    cudaEventCreate(&stop);
-    cudaEventRecord(start);
-#endif // CUDA_KERNEL_TIMING
-
-    // Setup dimensions of kernel launch using occupancy calculator.
     int blockSize, minGridSize;
     cudaOccupancyMaxPotentialBlockSize(&minGridSize, &blockSize, MaxKernel, 0, 0);
     dim3 block(blockSize, blockSize, 1);
@@ -32,13 +23,4 @@ void cudaMaxLauncher(float *output, const float *in0, const float *in1, const in
     // Synchronize device
     err = cudaDeviceSynchronize();
     cudaAssert(err);
-
-#ifdef CUDA_KERNEL_TIMING
-    cudaEventRecord(stop);
-    cudaEventSynchronize(stop);
-    float elapsed = 0.0f;
-    cudaEventElapsedTime(&elapsed, start, stop);
-    printf("Kernel execution time in ms: %f\n", elapsed);
-#endif // CUDA_KERNEL_TIMING
-
 }

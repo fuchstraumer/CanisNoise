@@ -105,6 +105,7 @@ __device__ float cellular(const float2 p, const float freq, const float displace
             break;
         }
     }
+    return dist;
 }
 
 __global__ void CellularKernel(cudaSurfaceObject_t out, const int width, const int height, const float freq, const float displacement, const voronoi_distance_t dist_func, const voronoi_return_t return_t) {
@@ -117,13 +118,6 @@ __global__ void CellularKernel(cudaSurfaceObject_t out, const int width, const i
 
 void cudaVoronoiLauncher(cudaSurfaceObject_t out, const int width, const int height, const float freq, const float displacement, const voronoi_distance_t dist_func, const voronoi_return_t return_t){
 
-#ifdef CUDA_KERNEL_TIMING
-    cudaEvent_t start, stop;
-    cudaEventCreate(&start);
-    cudaEventCreate(&stop);
-    cudaEventRecord(start);
-#endif // CUDA_KERNEL_TIMING
-
     dim3 threadsPerBlock(8, 8);
     dim3 numBlocks(width / threadsPerBlock.x, height / threadsPerBlock.y);
     CellularKernel<<<numBlocks, threadsPerBlock>>>(out, width, height, freq, displacement, dist_func, return_t);
@@ -132,13 +126,5 @@ void cudaVoronoiLauncher(cudaSurfaceObject_t out, const int width, const int hei
     // Synchronize device
     cudaError_t err = cudaDeviceSynchronize();
     cudaAssert(err);
-
-#ifdef CUDA_KERNEL_TIMING
-    cudaEventRecord(stop);
-    cudaEventSynchronize(stop);
-    float elapsed = 0.0f;
-    cudaEventElapsedTime(&elapsed, start, stop);
-    printf("Kernel execution time in ms: %f\n", elapsed);
-#endif // CUDA_KERNEL_TIMING
 
 }

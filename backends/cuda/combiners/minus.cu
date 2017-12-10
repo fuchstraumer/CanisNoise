@@ -21,32 +21,25 @@ __global__ void minusKernel(float* output, const float* in0, const float* in1, c
 }
 
 void cudaMinusLauncher(float* out, const float* in0, const float* in1, const int& width, const int& height) {
-
-    // Setup dimensions of kernel launch using occupancy calculator.
     int blockSize, minGridSize;
     cudaOccupancyMaxPotentialBlockSize(&minGridSize, &blockSize, minusKernel, 0, 0); 
     dim3 block(blockSize, blockSize, 1);
     dim3 grid((width - 1) / blockSize + 1, (height - 1) / blockSize + 1, 1);
     minusKernel<<<grid, block>>>(out, in0, in1, width, height);
-    // Check for succesfull kernel launch
     cudaError_t err = cudaGetLastError();
     cudaAssert(err);
-    // Synchronize device
     err = cudaDeviceSynchronize();
     cudaAssert(err);
 }
 
 void cudaMinusLauncherF(float* out, const float* in0, const float& amt, const int& width, const int& height) {
-    // Setup dimensions of kernel launch using occupancy calculator.
     int blockSize, minGridSize;
     cudaOccupancyMaxPotentialBlockSize(&minGridSize, &blockSize, minusKernelF, 0, 0); 
     dim3 block(blockSize, blockSize, 1);
     dim3 grid((width - 1) / blockSize + 1, (height - 1) / blockSize + 1, 1);
     minusKernelF<<<grid, block>>>(out, in0, amt, width, height);
-    // Check for succesfull kernel launch
     cudaError_t err = cudaGetLastError();
     cudaAssert(err);
-    // Synchronize device
     err = cudaDeviceSynchronize();
     cudaAssert(err);
 }

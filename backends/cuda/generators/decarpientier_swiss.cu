@@ -76,30 +76,15 @@ __global__ void d_swiss_kernel(float* out, int width, int height, noise_t noise_
 }
 
 void cudaDecarpientierSwissLauncher(float* out, int width, int height, noise_t noise_type, float2 origin, float freq, float lacun, float persist, int seed, int octaves) {
-#ifdef CUDA_KERNEL_TIMING
-    cudaEvent_t start, stop;
-    cudaEventCreate(&start);
-    cudaEventCreate(&stop);
-    cudaEventRecord(start);
-#endif // CUDA_KERNEL_TIMING
 
-    dim3 threadsPerBlock(8, 8);
-    dim3 numBlocks(width / threadsPerBlock.x, height / threadsPerBlock.y);
-    d_swiss_kernel<<<numBlocks, threadsPerBlock>>>(out, width, height, noise_type, origin, freq, lacun, persist, seed, octaves);
-    // Check for succesfull kernel launch
+    int blockSize, minGridSize;
+    cudaOccupancyMaxPotentialBlockSize(&minGridSize, &blockSize, d_swiss_kernel, 0, 0); 
+    dim3 block(blockSize, blockSize, 1);
+    dim3 grid((width - 1) / blockSize + 1, (height - 1) / blockSize + 1, 1);
+    d_swiss_kernel<<<grid, block>>>(out, width, height, noise_type, origin, freq, lacun, persist, seed, octaves);
     cudaError_t err = cudaGetLastError();
-    cudaAssert(cudaGetLastError());
-    // Synchronize device
+    cudaAssert(err);
     err = cudaDeviceSynchronize();
     cudaAssert(err);
 
-#ifdef CUDA_KERNEL_TIMING
-    cudaEventRecord(stop);
-    cudaEventSynchronize(stop);
-    float elapsed = 0.0f;
-    cudaEventElapsedTime(&elapsed, start, stop);
-    printf("Kernel execution time in ms: %f\n", elapsed);
-#endif // CUDA_KERNEL_TIMING
-
-    // If this completes, kernel is done and "output" contains correct data.
 }

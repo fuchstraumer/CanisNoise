@@ -46,31 +46,14 @@ __global__ void TurbulenceKernel(float* out, const float* input, const int width
     out[(j * width) + i] = input[(j_offset * width) + i_offset];
 }
 
-void cudaTurbulenceLauncher(float* out, const float* input, const int width, const int height, const noise_t noise_type, const int roughness, const int seed, const float strength, const float freq){
-
-#ifdef CUDA_KERNEL_TIMING
-    cudaEvent_t start, stop;
-    cudaEventCreate(&start);
-    cudaEventCreate(&stop);
-    cudaEventRecord(start);
-#endif // CUDA_KERNEL_TIMING
-
-    dim3 threadsPerBlock(8, 8);
-    dim3 numBlocks(width / threadsPerBlock.x, height / threadsPerBlock.y);
-    TurbulenceKernel<<<numBlocks, threadsPerBlock>>>(out, input, width, height, noise_type, roughness, seed, strength, freq);
-    // Check for succesfull kernel launch
-    cudaAssert(cudaGetLastError());
-    // Synchronize device
+void cudaTurbulenceLauncher(float* out, const float* input, const int width, const int height, const noise_t noise_type, const int roughness, const int seed, const float strength, const float freq) {
+    int blockSize, minGridSize;
+    cudaOccupancyMaxPotentialBlockSize(&minGridSize, &blockSize, TurbulenceKernel, 0, 0);
+    dim3 block(blockSize, blockSize, 1);
+    dim3 grid((width - 1) / blockSize + 1, (height - 1) / blockSize + 1, 1);
+    TurbulenceKernel<<<grid, block>>>(out, input, width, height, noise_type, roughness, seed, strength, freq);
+    err = cudaGetLastError();
+    cudaAssert(err);
     cudaError_t err = cudaDeviceSynchronize();
     cudaAssert(err);
-
-#ifdef CUDA_KERNEL_TIMING
-    cudaEventRecord(stop);
-    cudaEventSynchronize(stop);
-    float elapsed = 0.0f;
-    cudaEventElapsedTime(&elapsed, start, stop);
-    printf("Kernel execution time in ms: %f\n", elapsed);
-#endif // CUDA_KERNEL_TIMING
-
-    // If this completes, kernel is done and "output" contains correct data.
 }

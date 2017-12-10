@@ -64,13 +64,6 @@ __global__ void CurveKernel(float* output, float* input, const int width, const 
 
 void cudaCurveLauncher(float* output, float* input, const int width, const int height, const ControlPoint* control_points, const int& num_pts) {
 
-#ifdef CUDA_KERNEL_TIMING
-    cudaEvent_t start, stop;
-    cudaEventCreate(&start);
-    cudaEventCreate(&stop);
-    cudaEventRecord(start);
-#endif // CUDA_KERNEL_TIMING
-
     // Setup structs on GPU
     ControlPoint *device_point_array;
     cudaMalloc(&device_point_array, num_pts * sizeof(ControlPoint));
@@ -78,30 +71,18 @@ void cudaCurveLauncher(float* output, float* input, const int width, const int h
     // Copy structs to GPU
     cudaMemcpy(device_point_array, &control_points[0], num_pts * sizeof(ControlPoint), cudaMemcpyHostToDevice);
 
-    // Setup dimensions of kernel launch using occupancy calculator.
-    //int blockSize, minGridSize;
-    //cudaOccupancyMaxPotentialBlockSize(&minGridSize, &blockSize, CurveKernel, 0, 0); //???
-    dim3 block(8, 8, 1);
-    dim3 grid((width - 1) / block.x + 1, (height - 1) / block.y + 1, 1);
-    // Launch kernel.
+    int blockSize, minGridSize;
+    cudaOccupancyMaxPotentialBlockSize(&minGridSize, &blockSize, CurveKernel, 0, 0); 
+    dim3 block(blockSize, blockSize, 1);
+    dim3 grid((width - 1) / blockSize + 1, (height - 1) / blockSize + 1, 1);
     CurveKernel<<<grid, block>>>(output, input, width, height, device_point_array, num_pts);
 
-    // Check for succesfull kernel launch
-    cudaAssert(cudaGetLastError());
-    // Synchronize device
-    cudaError_t err = cudaDeviceSynchronize();
+    cudaError_t err = cudaGetLastError();
+    cudaAssert(err);
+    err = cudaDeviceSynchronize();
     cudaAssert(err);
 
     // Free control points array
     cudaFree(device_point_array);
-
-#ifdef CUDA_KERNEL_TIMING
-    cudaEventRecord(stop);
-    cudaEventSynchronize(stop);
-    float elapsed = 0.0f;
-    cudaEventElapsedTime(&elapsed, start, stop);
-    printf("Kernel execution time in ms: %f\n", elapsed);
-#endif // CUDA_KERNEL_TIMING
-
 
 }

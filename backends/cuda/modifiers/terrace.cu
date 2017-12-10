@@ -54,17 +54,6 @@ __global__ void TerraceKernel(float* output, const float* input, const int width
 
 void cudaTerraceLauncher(float * output, const float * input, const int width, const int height, const float* pts, const int& num_Pts, bool invert){
 
-#ifdef CUDA_KERNEL_TIMING
-    cudaEvent_t start, stop;
-    cudaEventCreate(&start);
-    cudaEventCreate(&stop);
-    cudaEventRecord(start);
-#endif // CUDA_KERNEL_TIMING
-
-    // Need this for checking allocation and copying
-    cudaError_t err = cudaSuccess;
-
-    // Allocate for points and copy them to GPU
     float* device_pts;
     err = cudaMalloc(&device_pts, sizeof(float) * num_Pts);
     cudaAssert(err);
@@ -72,23 +61,16 @@ void cudaTerraceLauncher(float * output, const float * input, const int width, c
     cudaAssert(err);
 
     int blockSize, minGridSize;
+    cudaOccupancyMaxPotentialBlockSize(&minGridSize, &blockSize, TerraceKernel, 0, 0);
     dim3 block(blockSize, blockSize, 1);
     dim3 grid((width - 1) / blockSize + 1, (height - 1) / blockSize + 1, 1);
-    // Launch kernel.
     TerraceKernel<<<grid, block>>>(output, input, width, height, device_pts, num_Pts, invert);
-    cudaAssert(cudaGetLastError());
+    err = cudaGetLastError();
+    cudaAssert(err);
     err = cudaDeviceSynchronize();
     cudaAssert(err);
 
     // Free device_pts
     cudaFree(device_pts);
-
-#ifdef CUDA_KERNEL_TIMING
-    cudaEventRecord(stop);
-    cudaEventSynchronize(stop);
-    float elapsed = 0.0f;
-    cudaEventElapsedTime(&elapsed, start, stop);
-    printf("Kernel execution time in ms: %f\n", elapsed);
-#endif // CUDA_KERNEL_TIMING
 
 }
