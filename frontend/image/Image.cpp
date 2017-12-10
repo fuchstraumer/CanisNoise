@@ -225,6 +225,10 @@ namespace cnoise {
             
         }
 
+        void ImageWriter::WriteInt16(const char* filename) {
+
+        }
+
         void ImageWriter::WriteRaw32(const char* filename) {
             std::ofstream out;
             out.open(filename, std::ios::out | std::ios::binary);
@@ -233,9 +237,6 @@ namespace cnoise {
                 unsigned char buff[4];
                 unpack_float(val, buff);
                 out.write(reinterpret_cast<char*>(buff), 4);
-                if (i > 0 && i % width == 0) {
-                    out.write("\0\0\0\0", 4);
-                }
             }
             out.close();
         }
