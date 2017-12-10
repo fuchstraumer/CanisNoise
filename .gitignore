@@ -23,4 +23,5 @@ frontend/backends/cuda/build/
 frontend/build/
 frontend/ext/include
 frontend/ext/lib
+frontend/download
 \.vscode/settings\.json

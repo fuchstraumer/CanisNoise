@@ -2,6 +2,7 @@
 #include "cuda_assert.h"
 #include "../image/Image.hpp"
 #include "utility/normalize.cuh"
+#include <algorithm>
 
 namespace cnoise {
 
@@ -18,7 +19,6 @@ namespace cnoise {
             else {
                 data = cpu_module_data(width, height);
             }
-  
     }
 
     void Module::ConnectModule(const std::shared_ptr<Module>& other) {
@@ -64,7 +64,15 @@ namespace cnoise {
             return std::move(result);
         }
         else {
-
+            auto& var = std::get<cpu_module_data>(data);
+            auto min_max = std::minmax_element(var.data.cbegin(), var.data.cend());
+            const float& min = *min_max.first;
+            const float& max = *min_max.second;
+            std::vector<float> result(var.data.cbegin(), var.data.cend());
+            for(auto& elem : result) {
+                elem = (elem - min) / (max - min);
+            }
+            return result;
         }
     }
     
