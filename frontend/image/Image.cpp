@@ -14,6 +14,11 @@ namespace cnoise {
             return;
         }
 
+        inline void unpack_u16(const uint16_t& in, char* dest) {
+            dest[0] = static_cast<char>(in & 0x00ff);
+            dest[1] = static_cast<char>((in & 0xff00) >> 8); 
+        }
+
         inline void unpack_32bit(int32_t integer, uint8_t* dest) {
             dest[0] = static_cast<uint8_t>((integer & 0x000000ff));
             dest[1] = static_cast<uint8_t>((integer & 0x0000ff00) >> 8);
@@ -35,77 +40,28 @@ namespace cnoise {
             return static_cast<uint16_t>(val);    
         };
 
-        template<typename T>
-        inline std::vector<T> convertRawData(const std::vector<float>& raw_data) {
-
-            // Get min of return datatype
-            __m128 t_min = _mm_set1_ps(static_cast<float>(std::numeric_limits<T>::min()));
-
-            // Like with the min/max of our set, we don't use max of T alone and instead can evaluate
-            // the expression its used with here (finding range of data type), instead of during every iteration
-            __m128 t_ratio = _mm_sub_ps(_mm_set1_ps(static_cast<float>(std::numeric_limits<T>::max())), t_min);
-
-            // Declare result vector and use resize so we can use memory offsets/addresses to store data in it.
-            std::vector<T> result;
-            result.resize(raw_data.size());
-
-            // Get min/max values from raw data
-            auto min_max = std::minmax_element(raw_data.begin(), raw_data.end());
-
-            // Mininum value is subtracted from each element.
-            __m128 min_register = _mm_set1_ps(*min_max.first);
-
-            // Max value is only use in divisor, with min, so precalculate divisor instead of doing this step each time.
-            __m128 ratio_register = _mm_sub_ps(min_register, _mm_set1_ps(*min_max.second));
-
-            // Iterate through result in steps of 4
-            for (size_t i = 0; i < result.size(); ++i) {
-                // Load 4 elements from raw_data - ps1 means unaligned load.
-                __m128 step_register = _mm_load_ps1(&raw_data[i]);
-
-                // get elements in "reg" into 0.0 - 1.0 scale.
-                step_register = _mm_sub_ps(reg, min);
-                step_register = _mm_div_ps(reg, ratio);
-
-                // Multiply step_register by t_ratio, to scale value by range of new datatype.
-                step_register = _mm_mul_ps(step_register, t_ratio);
-
-                // Add t_min to step_register, getting data fully into range of T
-                step_register = _mm_add_ps(step_register, t_min);
-
-                // Store data in result.
-                _mm_store1_ps(&result[i], reg);
+        inline std::vector<float> NormalizeFloatData(const std::vector<float>& data) {
+            auto min_max = std::minmax_element(data.cbegin(), data.cend());
+            const float& min = *min_max.first;
+            const float& max = *min_max.second;
+            std::vector<float> result(data.cbegin(), data.cend());
+            for(auto& elem : result) {
+                elem = (elem - min) / (max - min);
             }
-
-            // Return result, which can be (fairly) safely cast to the desired output type T. 
-            // At the least, the range of the data should better fit in the range offered by T.
             return result;
         }
 
-        template<typename T>
-        inline auto convertRawData_Ranged(const std::vector<float>& raw_data, const float& lower_bound, const float& upper_bound)->std::vector<T> {
-            // Declare result vector so we can use std::transform shortly.
-            std::vector<T> result;
-            result.reserve(raw_data.size());
-            // Get min/max values from raw data
-            auto min_max = std::minmax_element(raw_data.begin(), raw_data.end());
-            float max = *min_max.second;
-            float min = *min_max.first;
-            // Conversion lambda expression
-            auto convert = [min, max, lower_bound, upper_bound](const float& val)->T {
-                float result = (val - min) / (min - max); // Normalize val into 0.0 - 1.0 range.
-                result *= upper_bound;
-                result += lower_bound;
-                return static_cast<T>(result);
-            };
-            // Convert data
-            std::transform(raw_data.begin(), raw_data.end(), std::back_inserter(result), convert);
+        inline std::vector<uint16_t> ToInt16(const std::vector<float>& data) {
+            auto norm_data = NormalizeFloatData(data);
+            std::vector<uint16_t> result; result.reserve(norm_data.size());
+            for(size_t i = 0; i < norm_data.size(); ++i) {
+                result.push_back(norm_data[i] * std::numeric_limits<uint16_t>::max());
+            }
             return result;
         }
 
         ImageWriter::ImageWriter(int _width, int _height) : width(_width), height(_height) {
-            // Setup destination for raw data.
-            rawData.resize(width * height);
+            rawData.reserve(width * height);
         }
 
         void ImageWriter::FreeMemory() {
@@ -113,29 +69,6 @@ namespace cnoise {
             rawData.shrink_to_fit();
             pixelData.clear();
             pixelData.shrink_to_fit();
-        }
-
-        void ImageWriter::WriteBMP(const char * filename) {
-            uint8_t d[4];
-            std::ofstream os;
-            os.open(filename);
-            if (os.fail() || os.bad()) {
-                throw;
-            }
-
-            // Build header.
-            uint8_t buf[4];
-            os.write("BM", 2);
-            // Get/write filesize
-            size_t file_size = rawData.size() * 48; // num of elements * size of pixel
-            unpack_32bit(static_cast<int32_t>(file_size), buf);
-            os.write(reinterpret_cast<char*>(buf), 4);
-            os.write("\0\0\0\0", 4);
-            // Write size of header.
-            unpack_32bit(static_cast<int32_t>(54), buf);
-            os.write(reinterpret_cast<char*>(buf), 4);
-
-
         }
 
         void ImageWriter::WritePNG(const char * filename, int compression_level) {
@@ -192,41 +125,22 @@ namespace cnoise {
             pixelData.shrink_to_fit();
         }
 
-        void ImageWriter::WritePNG_16(const char* filename) {
-            std::vector<float> scaled_data;
-            // Copy values over to pixelData, for a grayscale image.
-            scaled_data.resize(rawData.size());
-            __m128 scale, min, ratio;
-            // Register used to scale up/down
-            scale = _mm_set1_ps(std::numeric_limits<uint16_t>::max());
-            auto min_max = std::minmax_element(rawData.begin(), rawData.end());
-            // register holding min element
-            min = _mm_set1_ps(*min_max.first);
-            // register used as divisor
-            ratio = _mm_sub_ps(min, _mm_set1_ps(*min_max.second));
-
-            for (size_t i = 0; i < rawData.size(); i += 4) {
-                __m128 reg; // Will hold floats in this register.
-                reg = _mm_load_ps1(&rawData[i]);
-                // get "reg" into 0.0 - 1.0 scale.
-                reg = _mm_sub_ps(reg, min);
-                reg = _mm_div_ps(reg, ratio);
-                // Multiply reg by scale.
-                reg = _mm_mul_ps(reg, scale);
-                // Store data in tmpBuffer.
-                _mm_store1_ps(&scaled_data[i], reg);
-            }
-
-            std::vector<uint16_t> pixel_data_16; 
-            pixel_data_16.reserve(rawData.size());
-            std::transform(scaled_data.begin(), scaled_data.end(), std::back_inserter(pixel_data_16), float_to_16);
-            std::vector<unsigned char> png;
-            
-            
-        }
-
         void ImageWriter::WriteInt16(const char* filename) {
-
+            const std::vector<uint16_t> file_data = ToInt16(rawData);
+            std::ofstream out;
+            out.open(filename, std::ios::out | std::ios::binary);
+            if(!out.is_open()) {
+                throw std::runtime_error("Failed to open file for writing!");
+            }
+            else {
+                for(size_t i = 0; i < file_data.size(); ++i) {
+                    const uint16_t& val = file_data[i];
+                    char buff[2];
+                    unpack_u16(val, buff);
+                    out.write(buff, 2);
+                }
+                out.close();
+            }
         }
 
         void ImageWriter::WriteRaw32(const char* filename) {
@@ -315,11 +229,5 @@ namespace cnoise {
         std::vector<float> ImageWriter::GetRawData() const {
             return rawData;
         }
-
-        void ImageWriter::WriteBMP_Header(std::ofstream & output_stream) const {
-            // TODO: Implement this. Need to do some more checks on insuring 4-byte alignment and correct sizing, somehow.
-        }
-
-
     }
 }

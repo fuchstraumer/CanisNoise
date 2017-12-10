@@ -13,15 +13,4 @@ struct alignas(sizeof(float)) cnoise_coord_t {
 	float value;
 };
 
-namespace cpu {
-
-	template<size_t sz>
-	struct cpu_coord_pack_t {
-		std::array<__m128, sz / 4> x;
-		std::array<__m128, sz / 4> y;
-		std::array<__m128, sz / 4> z;
-		std::array<__m128, sz / 4> value;
-	};
-};
-
 #endif //!CANIS_NOISE_COMMON_STRUCTS_HPP
