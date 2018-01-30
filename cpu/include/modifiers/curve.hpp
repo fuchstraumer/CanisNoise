@@ -1,7 +1,7 @@
 #pragma once
 #ifndef CPU_CURVE_HPP
 #define CPU_CURVE_HPP
-#include "../cpu_include.hpp"
+#include "cpu_include.hpp"
 
 struct ControlPoint;
 
