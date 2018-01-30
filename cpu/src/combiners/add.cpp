@@ -1,5 +1,5 @@
-#include "add.hpp"
-#include "../std_includes.hpp"
+#include "combiners/add.hpp"
+#include "std_includes.hpp"
 
 void cpuAddLauncher(float* output, const float* input0, const float* input1, const int width, const int height) {
     for(int j = 0; j < height; ++j) {
