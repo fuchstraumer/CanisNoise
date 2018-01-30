@@ -1,4 +1,4 @@
-#include "divide.hpp"
+#include "combiners/divide.hpp"
 
 void cpuDivideLauncher(float* output, const float* input0, const float* input1, const int& width, const int& height) {
     for(int j = 0; j < height; ++j) {

@@ -1,5 +1,4 @@
-#include "select.hpp"
-
+#include "combiners/select.hpp"
 
 float SCurve3(const float& a) {
     return (a * a * (3.0f - 2.0f * a));

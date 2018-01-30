@@ -1,4 +1,4 @@
-#include "blend.hpp"
+#include "combiners/blend.hpp"
 
 void cpuBlendLauncher(float* output, const float* input0, const float* input1, const float* control, 
                    const int& width, const int& height) {

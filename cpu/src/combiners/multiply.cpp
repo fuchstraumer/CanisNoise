@@ -1,4 +1,4 @@
-#include "multiply.hpp"
+#include "combiners/multiply.hpp"
 
 void cpuMultiplyLauncher(float* output, const float* input0, const float* input1, const int& width, const int& height) {
     for(int j = 0; j < height; ++j) {

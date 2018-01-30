@@ -1,4 +1,4 @@
-#include "power.hpp"
+#include "combiners/power.hpp"
 #include <cmath>
 
 void cpuPowerLauncher(float* output, const float* input0, const float* input1, const int width, const int height) {
