@@ -1,4 +1,4 @@
-#include "FBM.hpp"
+#include "generators/FBM.hpp"
 #include "noisegen.hpp"
 inline float fbmVal(const float& _x, const float& _y, const noise_t& noise_type, const float& freq, const float& lacun, const float& persist,
     const int& octaves, const int& _seed) {

@@ -5,5 +5,6 @@
 #include "CN_API.hpp"
 #include "CommonStructs.hpp"
 #include "CommonDef.hpp"
+#include <cstdint>
 
 #endif //!CPU_INCLUDE_HPP

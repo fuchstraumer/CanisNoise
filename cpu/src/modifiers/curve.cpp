@@ -1,4 +1,4 @@
-#include "curve.hpp"
+#include "modifiers/curve.hpp"
 #include <algorithm>
 #include "CommonStructs.hpp"
 

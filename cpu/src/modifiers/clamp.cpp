@@ -1,4 +1,4 @@
-#include "clamp.hpp"
+#include "modifiers/clamp.hpp"
 
 void cpuClampLauncher(float* output, const float* input, const float& min, const float& max, const int& width, const int& height) {
     for(int j = 0; j < height; ++j) {

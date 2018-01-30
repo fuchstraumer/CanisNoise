@@ -1,5 +1,5 @@
-#include "Billow.hpp"
-#include "../noisegen.hpp"
+#include "generators/Billow.hpp"
+#include "noisegen.hpp"
 #include "CommonDef.hpp"
 
 inline float billowVal(const float& _x, const float& _y, const noise_t& noise_type, const float& freq, const float& lacunarity, 

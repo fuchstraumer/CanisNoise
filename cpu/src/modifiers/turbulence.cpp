@@ -1,4 +1,4 @@
-#include "turbulence.hpp"
+#include "modifiers/turbulence.hpp"
 
 void cpuTurbulenceLauncher(float* output, const float* input, const int& width, 
                         const int& height, const int& roughness, const int& seed,

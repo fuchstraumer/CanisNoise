@@ -1,4 +1,4 @@
-#include "terrace.hpp"
+#include "modifiers/terrace.hpp"
 #include <algorithm> 
 
 void cpuTerraceLauncher(float* output, const float* input, const int& width, const int& height, const float* pts, const int& num_pts, const bool& invert) {

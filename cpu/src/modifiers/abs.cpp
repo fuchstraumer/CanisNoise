@@ -1,4 +1,4 @@
-#include "abs.hpp"
+#include "modifiers/abs.hpp"
 
 void cpuAbsLauncher(float* output, const float* input, const int& width, const int& height) {
     for(int j = 0; j < height; ++j) {
