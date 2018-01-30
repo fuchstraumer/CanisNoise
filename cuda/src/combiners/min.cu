@@ -1,4 +1,4 @@
-#include "min.cuh"
+#include "combiners/min.cuh"
 
 __global__ void MinKernel(float* output, const float* in0, const float* in1, const int width, const int height) {
     const int i = blockDim.x * blockIdx.x + threadIdx.x;

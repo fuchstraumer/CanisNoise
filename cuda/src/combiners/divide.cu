@@ -1,4 +1,4 @@
-#include "divide.cuh"
+#include "combiners/divide.cuh"
 
 __global__ void divideKernel(float* out, const float* in0, const float* in1, const int& width, const int& height) {
     const int i = blockIdx.x * blockDim.x + threadIdx.x;

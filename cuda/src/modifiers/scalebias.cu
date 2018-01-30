@@ -1,4 +1,4 @@
-#include "scalebias.cuh"
+#include "modifiers/scalebias.cuh"
 
 __global__ void scalebiasKernel(float* output, float* input, const int width, const int height, float scale, float bias) {
     // Get current pixel.

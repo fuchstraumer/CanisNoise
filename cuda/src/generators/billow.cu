@@ -1,4 +1,5 @@
-#include "billow.cuh"
+#include "generators/billow.cuh"
+#include "noise_generators.cuh"
 
 __device__ float billow2D_Simplex(float2 point, float freq, float lacun, float persist, int init_seed, int octaves) {
     float result = 0.0f;

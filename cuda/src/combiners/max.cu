@@ -1,4 +1,4 @@
-#include "max.cuh"
+#include "combiners/max.cuh"
 
 __global__ void MaxKernel(float *output, const float *in0, const float *in1, const int width, const int height) {
     const int i = blockDim.x * blockIdx.x * threadIdx.x;

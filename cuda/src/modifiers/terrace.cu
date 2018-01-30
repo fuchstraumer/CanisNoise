@@ -1,5 +1,5 @@
-#include "terrace.cuh"
-#include "../cutil_math.cuh"
+#include "modifiers/terrace.cuh"
+#include "cutil_math.cuh"
 
 __global__ void TerraceKernel(float* output, const float* input, const int width, const int height, const float* pts, const int num_pts, const bool invert) {
     const int i = blockDim.x * blockIdx.x + threadIdx.x;

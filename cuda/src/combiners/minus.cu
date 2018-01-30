@@ -1,4 +1,4 @@
-#include "minus.cuh"
+#include "combiners/minus.cuh"
 
 __global__ void minusKernelF(float* output, const float* input, const float& amt, const int& width, const int& height) {
     const int i = blockIdx.x * blockDim.x + threadIdx.x;

@@ -1,5 +1,5 @@
-#include "decarpientier_swiss.cuh"
-
+#include "generators/decarpientier_swiss.cuh"
+#include "noise_generators.cuh"
 
 __device__ float d_swiss_simplex(float2 point, const float freq, const float lacun, const float persist, const int init_seed, const int octaves) {
     // Will be incremented upon.

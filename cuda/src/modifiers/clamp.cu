@@ -1,4 +1,4 @@
-#include "clamp.cuh"
+#include "modifiers/clamp.cuh"
 
 __global__ void ClampKernel(float* output, float* input, const int width, const int height, const float lower_value, const float upper_value) {
     const int i = blockDim.x * blockIdx.x + threadIdx.x;

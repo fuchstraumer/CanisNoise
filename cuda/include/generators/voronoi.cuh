@@ -1,7 +1,7 @@
 #pragma once
 #ifndef VORONOI_CUH
 #define VORONOI_CUH
-#include "../CUDA_Include.cuh"
+#include "CUDA_Include.cuh"
 
 CN_API void cudaVoronoiLauncher(cudaSurfaceObject_t out, const int width, const int height, const float freq, const float displacement, const voronoi_distance_t dist_func, const voronoi_return_t return_t);
 

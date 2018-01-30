@@ -1,5 +1,5 @@
-#include "blend.cuh"
-#include "../cutil_math.cuh"
+#include "combiners/blend.cuh"
+#include "cutil_math.cuh"
 
 __global__ void BlendKernel(float *output, const float* in0, const float* in1, const float* control, const int width, const int height) {
     const int i = blockDim.x * blockIdx.x + threadIdx.x;

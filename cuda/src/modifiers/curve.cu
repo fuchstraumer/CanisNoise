@@ -1,4 +1,4 @@
-#include "curve.cuh"
+#include "modifiers/curve.cuh"
 
 __device__ int clamp(int val, int lower_bound, int upper_bound) {
     if (val < lower_bound) {

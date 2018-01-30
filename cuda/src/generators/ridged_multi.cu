@@ -1,4 +1,5 @@
-#include "ridged_multi.cuh"
+#include "generators/ridged_multi.cuh"
+#include "noise_generators.cuh"
 
 __device__ float Ridged2D_Simplex(float2 point, const float freq, const float lacun, const float persist, const int init_seed, const int octaves) {
     float result = 0.0f;

@@ -1,4 +1,4 @@
-#include "Select.cuh"
+#include "combiners/select.cuh"
 
 __device__ float SCurve3(float a){
     return (a * a * (3.0f - 2.0f * a));

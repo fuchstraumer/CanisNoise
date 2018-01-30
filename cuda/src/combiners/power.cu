@@ -1,4 +1,4 @@
-#include "power.cuh"
+#include "combiners/power.cuh"
 
 
 __global__ void powerKernel(float* output, float* input0, float* input1, const int width, const int height) {

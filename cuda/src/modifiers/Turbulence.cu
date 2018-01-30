@@ -1,5 +1,5 @@
-#include "Turbulence.cuh"
-#include "../generators/FBM.cuh"
+#include "modifiers/Turbulence.cuh"
+#include "generators/FBM.cuh"
 /*
     
     Turbulence process:

@@ -1,4 +1,4 @@
-#include "voronoi.cuh"
+#include "generators/voronoi.cuh"
 
 __device__ __constant__ float CELL_2D_X[256] =
 {

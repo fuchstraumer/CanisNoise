@@ -1,4 +1,4 @@
-#include "multiply.cuh"
+#include "combiners/multiply.cuh"
 
 
 __global__ void multiplyKernelF(float* output, float* input, const int width, const int height, const float factor) {

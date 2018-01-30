@@ -1,4 +1,4 @@
-#include "Add.cuh"
+#include "combiners/add.cuh"
 
 __global__ void AddKernel(float* output, float* input0, float* input1, const int width, const int height) {
     // Get current pixel.
