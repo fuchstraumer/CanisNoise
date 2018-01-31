@@ -733,9 +733,10 @@ __device__ float simplex3d(const float px, const float py, const float pz, const
 
     // First positional coordinate
     float3 p0;
-    p0.x = px - (i_s.x - ((i_s.x + i_s.y + i_s.z) * G3));
-    p0.y = py - (i_s.y - ((i_s.x + i_s.y + i_s.z) * G3));
-    p0.z = pz - (i_s.z - ((i_s.x + i_s.y + i_s.z) * G3));
+    const float gg = (i_s.x + i_s.y + i_s.z) * G3;
+    p0.x = px - (i_s.x - gg);
+    p0.y = py - (i_s.y - gg);
+    p0.z = pz - (i_s.z - gg);
 
     int3 i1, i2;
 

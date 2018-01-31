@@ -25,3 +25,4 @@ frontend/ext/include
 frontend/ext/lib
 frontend/download
 \.vscode/settings\.json
+build/
