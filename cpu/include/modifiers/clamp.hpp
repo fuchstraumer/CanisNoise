@@ -3,6 +3,6 @@
 #define CPU_CLAMP_HPP
 #include "../cpu_include.hpp"
 
-API_CALL void cpuClampLauncher(float* output, const float* input, const float& min, const float& max, const int& height, const int& width);
+CN_API void cpuClampLauncher(float* output, const float* input, const float& min, const float& max, const int& height, const int& width);
 
 #endif //!CPU_CLAMP_HPP

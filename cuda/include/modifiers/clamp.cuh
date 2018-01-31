@@ -3,6 +3,6 @@
 #define CLAMP_CUH
 #include "../CUDA_Include.cuh"
 
-API_CALL void cudaClampLauncher(float* output, float* input, const int width, const int height, const float low_val, const float high_val);
+CN_API void cudaClampLauncher(float* output, float* input, const int width, const int height, const float low_val, const float high_val);
 
 #endif // !CLAMP_CUH

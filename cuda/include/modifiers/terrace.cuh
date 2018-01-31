@@ -3,6 +3,6 @@
 #define TERRACE_CUH
 #include "../CUDA_Include.cuh"
 
-API_CALL void cudaTerraceLauncher(float* output, const float* input, const int width, const int height, const float* pts, const int& num_Pts, bool invert);
+CN_API void cudaTerraceLauncher(float* output, const float* input, const int width, const int height, const float* pts, const int& num_Pts, bool invert);
 
 #endif // !TERRACE_CUH

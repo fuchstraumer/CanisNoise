@@ -3,7 +3,7 @@
 #define CPU_MIN_HPP
 #include "../cpu_include.hpp"
 
-API_CALL void cpuMinLauncher(float* output, const float* input0, const float* input1, const int width, const int height);
+CN_API void cpuMinLauncher(float* output, const float* input0, const float* input1, const int width, const int height);
 
 
 #endif //!CPU_MIN_HPP

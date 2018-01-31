@@ -3,6 +3,6 @@
 #define SCALEBIAS_CUH
 #include "../CUDA_Include.cuh"
 
-API_CALL void cudaScaleBiasLauncher(float* output, float* input, const int width, const int height, float scale, float bias);
+CN_API void cudaScaleBiasLauncher(float* output, float* input, const int width, const int height, float scale, float bias);
 
 #endif // 
