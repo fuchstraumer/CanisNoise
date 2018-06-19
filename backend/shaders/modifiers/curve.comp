@@ -7,11 +7,11 @@ layout (constant_index = 1) const uint MaxY = 256;
 layout (constant_index = 2) const uint MaxZ = 1;
 layout (constant_index = 3) const uint NumPts = 8;
 
-layout (set = 0, binding = 0, rgba32f) readonly imageBuffer positions;
-layout (set = 0, binding = 1, r32f) readonly imageBuffer input;
-layout (set = 0, binding = 3, r32f) writeonly imageBuffer output;
 
-layout (set = 1, binding = 0, rg32f) readonly imageBuffer ControlPoints;
+layout (set = 0, binding = 0, rgba32f) restrict readonly imageBuffer positions;
+layout (set = 0, binding = 1, r32f) restrict readonly imageBuffer input;
+layout (set = 0, binding = 3, r32f) restrict writeonly imageBuffer output;
+layout (set = 1, binding = 0, rg32f) restrict readonly imageBuffer ControlPoints;
 
 int GetIdx(int i, int j, int k) {
     return int(MaxX * MaxY * k + MaxX * j + i);

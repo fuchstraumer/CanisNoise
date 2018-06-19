@@ -6,10 +6,10 @@ layout (constant_index = 0) const uint MaxX = 256;
 layout (constant_index = 1) const uint MaxY = 256;
 layout (constant_index = 2) const uint MaxZ = 1;
 
-layout (set = 0, binding = 0, rgba32f) readonly imageBuffer positions;
-layout (set = 0, binding = 1, r32f) readonly imageBuffer input0;
-layout (set = 0, binding = 2, r32f) readonly imageBuffer input1;
-layout (set = 0, binding = 3, r32f) writeonly imageBuffer output;
+layout (set = 0, binding = 0, rgba32f) restrict readonly imageBuffer positions;
+layout (set = 0, binding = 1, r32f) restrict readonly imageBuffer input0;
+layout (set = 0, binding = 2, r32f) restrict readonly imageBuffer input1;
+layout (set = 0, binding = 3, r32f) restrict writeonly imageBuffer output;
 
 int GetIdx(int i, int j, int k) {
     return int(MaxX * MaxY * k + MaxX * j + i);

@@ -8,11 +8,10 @@ layout (constant_index = 2) const uint MaxZ = 1;
 layout (constant_index = 3) const uint NumPts = 8;
 layout (constant_index = 4) const bool Invert = false;
 
-layout (set = 0, binding = 0, rgba32f) readonly imageBuffer positions;
-layout (set = 0, binding = 1, r32f) readonly imageBuffer input;
-layout (set = 0, binding = 2, r32f) writeonly imageBuffer output;
-
-layout (set = 1, binding = 0, r32f) readonly imageBuffer points;
+layout (set = 0, binding = 0, rgba32f) restrict readonly imageBuffer positions;
+layout (set = 0, binding = 1, r32f) restrict readonly imageBuffer input;
+layout (set = 0, binding = 3, r32f) restrict writeonly imageBuffer output;
+layout (set = 1, binding = 0, r32f) restrict readonly imageBuffer points;
 
 int GetIdx(int i, int j, int k) {
     return int(MaxX * MaxY * k + MaxX * j + i);
