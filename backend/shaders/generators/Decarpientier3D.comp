@@ -22,7 +22,7 @@ layout (set = 1, binding = 0) uniform ubo {
 
 #include "simplex3d_deriv.comp"
 
-int GetIdx(int i, int j, int k) {
+int GetIdx(uint i, uint j, uint k) {
     return int(MaxX * MaxY * k + MaxX * j + i);
 }
 

@@ -11,7 +11,7 @@ layout (set = 0, binding = 1, r32f) restrict readonly imageBuffer input0;
 layout (set = 0, binding = 2, r32f) restrict readonly imageBuffer input1;
 layout (set = 0, binding = 3, r32f) restrict writeonly imageBuffer output;
 
-int GetIdx(int i, int j, int k) {
+int GetIdx(uint i, uint j, uint k) {
     return int(MaxX * MaxY * k + MaxX * j + i);
 }
 

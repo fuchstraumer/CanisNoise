@@ -15,7 +15,7 @@ layout (push_constant) params {
     float (offset = 4) Bias;
 } Params;
 
-int GetIdx(int i, int j, int k) {
+int GetIdx(uint i, uint j, uint k) {
     return int(MaxX * MaxY * k + MaxX * j + i);
 }
 

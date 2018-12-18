@@ -5,12 +5,12 @@
 layout (constant_id = 0) const int MaxX = 256;
 layout (constant_id = 1) const int MaxY = 256;
 layout (constant_id = 2) const int MaxZ = 1;
-layout (constant_id = 3) const int MinX = MaxX / 4;
-layout (constant_id = 4) const int MinY = MaxY / 4;
+layout (constant_id = 3) const int MinX = MaxX / 2;
+layout (constant_id = 4) const int MinY = MaxY / 2;
 layout (set = 0, binding = 1, r32f) restrict readonly imageBuffer input;
 layout (set = 0, binding = 3, r32f) restrict writeonly imageBuffer output;
 
-int GetIdx(int i, int j, int k) {
+int GetIdx(uint i, uint j, uint k) {
     return int(MaxX * MaxY * k + MaxX * j + i);
 }
 
