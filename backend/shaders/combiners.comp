@@ -1,0 +1,171 @@
+#version 450
+#extension GL_ARB_separate_shader_objects : enable
+#extension GL_ARB_shading_language_420pack : enable
+#extension GL_KHR_vulkan_glsl : enable
+
+// default: add op
+layout (constant_id = 0) const uint OperationType = 0;
+layout (constant_id = 1) const uint MaxX = 256;
+layout (constant_id = 2) const uint MaxY = 256;
+layout (constant_id = 3) const uint MaxZ = 1;
+
+layout (set = 0, binding = 0, rgba32f) restrict readonly imageBuffer positions;
+layout (set = 0, binding = 1, r32f) restrict readonly imageBuffer input0;
+layout (set = 0, binding = 2, r32f) restrict readonly imageBuffer input1;
+layout (set = 0, binding = 3, r32f) restrict writeonly imageBuffer outputImg;
+// only bound for operations that use this
+layout (set = 1, binding = 0, r32f) restrict readonly imageBuffer controlImg;
+
+// used only for select operation
+layout (push_constant) selectParams
+{
+    float (offset = 0) SelectUpperBound;
+    float (offset = 4) SelectLowerBound;
+    float (offset = 8) SelectFalloff;
+};
+
+#define OPERATION_TYPE_ADD      0
+#define OPERATION_TYPE_SUBTRACT 1
+#define OPERATION_TYPE_MULTIPLY 2
+#define OPERATION_TYPE_DIVIDE   3
+#define OPERATION_TYPE_MIN      4
+#define OPERATION_TYPE_MAX      5
+#define OPERATION_TYPE_POWER    6
+#define OPERATION_TYPE_BLEND    7
+#define OPERATION_TYPE_SELECT   8
+
+int GetIdx(uint i, uint j, uint k)
+{
+    return int(MaxX * MaxY * k + MaxX * j + i);
+}
+
+float SCurve3(float a)
+{
+    return ( a * a * (3.0f - 2.0f * a));
+}
+
+float LerpSelect(float n0, float n1, float a)
+{
+    return ((1.0f - a) * n0) + (a * n1);
+}
+
+void OperationBlend(
+    in const int idx,
+    in const float val0,
+    in const float val1,
+    out float opResult)
+{
+    const float controlValue = imageLoad(controlImg, idx).r;
+    opResult = lerp(val0, val1, controlValue);
+}
+
+void OperationSelect(
+    in const int idx,
+    in const float val0,
+    in const float val1,
+    out float opResult)
+{
+    const float selectValue = imageLoad(controlImg, idx).r;
+    float alpha = 0.0f;
+
+    if (SelectFalloff > 0.0f)
+    {
+        if (selectValue < SelectLowerBound - SelectFalloff)
+        {
+            opResult = val0;
+        }
+        else if (selectValue < SelectLowerBound + SelectFalloff)
+        {
+            const float lCurve = SelectLowerBound - SelectFalloff;
+            const float uCurve = SelectLowerBound + SelectFalloff;
+            const float ulRatio = 1.0f / (uCurve - lCurve);
+            alpha = SCurve3((selectValue - lCurve) * ulRatio);
+            opResult = LerpSelect(val0, val1, alpha);
+        }
+        else if (selectValue < SelectUpperBound - SelectFalloff)
+        {
+            opResult = val1;
+        }
+        else if (selectValue < SelectUpperBound + SelectFalloff)
+        {
+            const float lCurve = SelectUpperBound - SelectFalloff;
+            const float uCurve = SelectUpperBound + SelectFalloff;
+            const float ulRatio = 1.0f / (uCurve - lCurve);
+            alpha = SCurve3((selectValue - lCurve) * ulRatio);
+            opResult = LerpSelect(val0, val1, alpha);
+        }
+        else
+        {
+            opResult = val0;
+        }
+    }
+    else
+    {
+        if (selectValue < SelectLowerBound || selectValue > SelectUpperBound)
+        {
+            opResult = val0;
+        }
+        else
+        {
+            opResult = val1;
+        }
+    }
+}
+
+void main()
+{
+    const uvec3 maxDims = uvec3(MaxX, MaxY, MaxZ);
+
+    if (any(greaterThan(gl_GlobalInvocationID, maxDims)))
+    {
+        return;
+    }
+
+    const int idx = GetIdx(
+        gl_GlobalInvocationID.x,
+        gl_GlobalInvocationID.y,
+        gl_GlobalInvocationID.z);
+
+    
+    float opResult = 0.0f;
+
+    const float input0_val = imageLoad(input0, idx).r;
+    const float input1_val = imageLoad(input1, idx).r;
+
+    // As this is specified with specialization constants, we can compile
+    // the variants we need by just toggling the constant through values.
+    // This will let us share the pipeline cache and create all our
+    // requisite pipelines in one go.
+    switch (OperationType)
+    {
+    case OPERATION_TYPE_ADD:
+        opResult = input0_val + input1_val;
+        break;
+    case OPERATION_TYPE_SUBTRACT:
+        opResult = input0_val - input1_val;
+        break;
+    case OPERATION_TYPE_MULTIPLY:
+        opResult = input0_val * input1_val;
+        break;
+    case OPERATION_TYPE_DIVIDE:
+        opResult = input0_val / input1_val;
+        break;
+    case OPERATION_TYPE_MIN:
+        opResult = min(input0_val, input1_val);
+        break;
+    case OPERATION_TYPE_MAX:
+        opResult = max(input0_val, input1_val);
+        break;
+    case OPERATION_TYPE_POWER:
+        opResult = pow(input0_val, input1_val);
+        break;
+    case OPERATION_TYPE_BLEND:
+        OperationBlend(idx, input0_val, input1_val, opResult);
+        break;
+    case OPERATION_TYPE_SELECT:
+        OperationSelect(idx, input0_val, input1_val, opResult);
+        break;
+    }
+
+    imageStore(outputImg, idx, vec4(opResult, 0.0f, 0.0f, 0.0f));
+}
