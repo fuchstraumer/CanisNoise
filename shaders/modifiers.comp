@@ -1,7 +1,6 @@
 #version 450
 #extension GL_ARB_separate_shader_objects : enable
 #extension GL_ARB_shading_language_420pack : enable
-#extension GL_KHR_vulkan_glsl : enable
 #extension GL_KHR_shader_subgroup_quad : enable
 
 #define OPERATION_TYPE_ABS          0
@@ -11,34 +10,37 @@
 #define OPERATION_TYPE_TERRACE      4
 #define OPERATION_TYPE_CURVE        5
 
-layout (constant_id = 0) const uint OperationType = 0;
-layout (constant_id = 1) const uint MaxX = 256;
-layout (constant_id = 2) const uint MaxY = 256;
-layout (constant_id = 3) const uint MaxZ = 1;
+
+layout (constant_id = 0) const int OperationType = 0;
+layout (constant_id = 1) const int MaxX = 256;
+layout (constant_id = 2) const int MaxY = 256;
+layout (constant_id = 3) const int MaxZ = 1;
 // Same specialization constant reused by the terrace and curve operations
-layout (constant_id = 4) const uint NumControlPoints = 16;
+layout (constant_id = 4) const int NumControlPoints = 16;
 layout (constant_id = 5) const bool TerraceInvert = false;
 // Required for downsample operation/kernel
-layout (constant_id = 6) const uint MinX = MaxX / 2;
-layout (constant_id = 7) const uint MinY = MaxY / 2;
-layout (constant_id = 8) const uint MinZ = max(MaxZ / 2, 1);
+layout (constant_id = 6) const int MinX = MaxX / 4;
+layout (constant_id = 7) const int MinY = MaxY / 4;
+layout (constant_id = 8) const int MinZ = 0;
 
-layout (set = 0, binding = 0, rgba32f) restrict readonly imageBuffer positions;
-layout (set = 0, binding = 1, r32f) restrict readonly imageBuffer input;
-layout (set = 0, binding = 3, r32f) restrict writeonly imageBuffer outputImg;
+layout (local_size_x = 256, local_size_y = 256, local_size_z = 1) in;
+
+layout (set = 0, binding = 0, rgba32f) restrict readonly uniform imageBuffer positions;
+layout (set = 0, binding = 1, r32f) restrict readonly uniform imageBuffer inputImg;
+layout (set = 0, binding = 299, r32f) restrict writeonly uniform imageBuffer outputImg;
 // Storage for the control points used in terrace and curve ops. in a higher set
 // so it's easier to handle as an optional.
-layout (set = 1, binding = 0, rg32f) restrict readonly imageBuffer controlPointsImg;
+layout (set = 0, binding = 3, rg32f) restrict readonly uniform imageBuffer controlPointsImg;
 
 // For entrypoints not using these, we can just avoid pushing data for the most part.
 // Still declared as element of pipeline layout though, since that's shared among all entrypoints
-layout (push_constant) operationParams
+layout (push_constant) uniform operationParams
 {
-    float (offset = 0) ClampLowerBound;
-    float (offset = 4) ClampUpperBound;
-    float (offset = 8) sbScale;
-    float (offset = 12) sbBias;
-}
+    layout (offset = 0) float ClampLowerBound;
+    layout (offset = 4) float ClampUpperBound;
+    layout (offset = 8) float sbScale;
+    layout (offset = 12) float sbBias;
+};
 
 int GetThreadIdx(const uint i, const uint j, const uint k)
 {
@@ -57,32 +59,32 @@ float CubicInterp(const float n0, const float n1, const float n2, const float n3
     This shader works a bit differently than the combiners shader: most of these operations
     are a fair bit more complex, so we leave storing out the final value to the individual
     operation functions. This is especially important for the downsample op, since it
-    doesn't store 1:1 input:output values, only for 1/4 of our inputs.
+    doesn't store 1:1 inputImg:output values, only for 1/4 of our inputs.
 */
 
 void OperationAbs(in const int threadIdx)
 {
-    const float outputValue = abs(imageLoad(input, threadIdx).r);
+    const float outputValue = abs(imageLoad(inputImg, threadIdx).r);
     imageStore(outputImg, threadIdx, vec4(outputValue, 0.0f, 0.0f, 0.0f));
 }
 
 void OperationClamp(in const int threadIdx)
 {
-    const float inputValue = imageLoad(input, threadIdx).r;
+    const float inputValue = imageLoad(inputImg, threadIdx).r;
     const float outputValue = clamp(inputValue, ClampLowerBound, ClampUpperBound);
     imageStore(outputImg, threadIdx, vec4(outputValue, 0.0f, 0.0f, 0.0f));
 }
 
 void OperationScaleBias(in const int threadIdx)
 {
-    const float inputValue = imageLoad(input, threadIdx).r;
+    const float inputValue = imageLoad(inputImg, threadIdx).r;
     const float outputValue = (inputValue * sbScale) + sbBias;
     imageStore(outputImg, threadIdx, vec4(outputValue, 0.0f, 0.0f, 0.0f));
 }
 
 void OperationDownsample(in const int threadIdx)
 {
-    const float inValue = imageLoad(input, threadIdx).r;
+    const float inValue = imageLoad(inputImg, threadIdx).r;
 
     float downsampledValue = inValue + subgroupQuadSwapHorizontal(inValue);
     downsampledValue += subgroupQuadSwapVertical(downsampledValue);
@@ -90,9 +92,9 @@ void OperationDownsample(in const int threadIdx)
     if (gl_SubgroupInvocationID == subgroupQuadBroadcast(gl_SubgroupInvocationID, 0))
     {
         const int downsampleIdx =
-            (MinX * MinY * gl_GlobalInvocationID.z) +
-            (MinX * gl_GlobalInvocationID.y) +
-            gl_GlobalInvocationID.x;
+            int(MinX * MinY * gl_GlobalInvocationID.z) +
+            int(MinX * gl_GlobalInvocationID.y) +
+            int(gl_GlobalInvocationID.x);
         
         imageStore(outputImg, downsampleIdx, vec4(downsampledValue, 0.0f, 0.0f, 0.0f));
     }
@@ -100,7 +102,7 @@ void OperationDownsample(in const int threadIdx)
 
 void OperationTerrace(in const int threadIdx)
 {
-    const float inputValue = imageLoad(input, threadIdx).r;
+    const float inputValue = imageLoad(inputImg, threadIdx).r;
     const int ptIdx = clamp(int(round(inputValue)), 0, int(NumControlPoints));
 
     const int idx0 = clamp(ptIdx - 1, 0, int(NumControlPoints) - 1);
@@ -112,8 +114,8 @@ void OperationTerrace(in const int threadIdx)
         imageStore(outputImg, threadIdx, vec4(outputValue, 0.0f, 0.0f, 0.0f));
     }
 
-    const float val0 = imageLoad(controlPointsImg, idx0).r;
-    const float val1 = imageLoad(controlPointsImg, idx1).r;
+    float val0 = imageLoad(controlPointsImg, idx0).r;
+    float val1 = imageLoad(controlPointsImg, idx1).r;
 
     float alpha = (inputValue - val0) / (val1 - val0);
 
@@ -126,17 +128,17 @@ void OperationTerrace(in const int threadIdx)
     }
 
     alpha *= alpha;
-    const float outputValue = lerp(val0, val1, alpha);
+    const float outputValue = mix(val0, val1, alpha);
     imageStore(outputImg, threadIdx, vec4(outputValue, 0.0f, 0.0f, 0.0f));
 }
 
 void OperationCurve(in const int threadIdx)
 {
-    const float inputValue = imageLoad(input, threadIdx).r;
+    const float inputValue = imageLoad(inputImg, threadIdx).r;
 
     // cache control points locally instead of reloading them a ton step-by-step
     vec2 controlPoints[NumControlPoints];
-    for (uint idx = 0; idx < NumControlPoints; ++idx)
+    for (int idx = 0; idx < NumControlPoints; ++idx)
     {
         controlPoints[idx] = imageLoad(controlPointsImg, idx).rg;
     }
