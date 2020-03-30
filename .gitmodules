@@ -4,3 +4,9 @@
 [submodule "submodules/imgui"]
 	path = submodules/imgui
 	url = https://github.com/ocornut/imgui
+[submodule "submodules/svs"]
+	path = submodules/svs
+	url = https://github.com/Tobski/simple_vulkan_synchronization
+[submodule "submodules/vma"]
+	path = submodules/vma
+	url = https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator
