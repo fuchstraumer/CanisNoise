@@ -15,9 +15,12 @@ INITIALIZE_EASYLOGGINGPP
 void SetupPipelineCacheDir()
 {
     const std::filesystem::path tmpDir = std::filesystem::temp_directory_path() / "CanisNoiseCache";
-    if (!std::filesystem::create_directories(tmpDir))
+    if (!std::filesystem::exists(tmpDir))
     {
-        std::cerr << "Couldn't create a directory to store pipeline caches in.";
+        if (!std::filesystem::create_directories(tmpDir))
+        {
+            std::cerr << "Couldn't create a directory to store pipeline caches in.";
+        }
     }
     const std::string dirString = tmpDir.string();
     vpr::PipelineCache::SetCacheDirectory(dirString.c_str());
