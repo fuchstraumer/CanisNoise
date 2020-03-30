@@ -20,12 +20,26 @@ constexpr static std::array<VkDescriptorSetLayoutBinding, 5> combinerLayoutBindi
     VkDescriptorSetLayoutBinding{ 4, VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER, 1u, VK_SHADER_STAGE_COMPUTE_BIT, nullptr }
 };
 
+constexpr static VkPushConstantRange combinerPushConstantRange
+{
+    VK_SHADER_STAGE_COMPUTE_BIT,
+    0u,
+    sizeof(float) * 3u
+};
+
 constexpr static std::array<VkDescriptorSetLayoutBinding, 4> modifierLayoutBindings
 {
     VkDescriptorSetLayoutBinding{ 0, VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER, 1u, VK_SHADER_STAGE_COMPUTE_BIT, nullptr },
     VkDescriptorSetLayoutBinding{ 1, VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER, 1u, VK_SHADER_STAGE_COMPUTE_BIT, nullptr },
     VkDescriptorSetLayoutBinding{ 2, VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER, 1u, VK_SHADER_STAGE_COMPUTE_BIT, nullptr },
     VkDescriptorSetLayoutBinding{ 3, VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER, 1u, VK_SHADER_STAGE_COMPUTE_BIT, nullptr },
+};
+
+constexpr static VkPushConstantRange modifierPushConstantRange
+{
+    VK_SHADER_STAGE_COMPUTE_BIT,
+    0u,
+    sizeof(float) * 4u
 };
 
 constexpr static VkComputePipelineCreateInfo baseComputePipelineInfo
@@ -147,13 +161,20 @@ void PsoCacheImpl::Initialize(const VkDevice device, const VkPhysicalDevice host
 
 void PsoCacheImpl::createCombinerPipelines(const VkDevice device)
 {
+    const size_t typeIdx = static_cast<size_t>(NodeType::Combiner);
+    descriptorSetLayouts[typeIdx] = std::make_unique<vpr::DescriptorSetLayout>(device);
+    descriptorSetLayouts[typeIdx]->AddDescriptorBindings(static_cast<uint32_t>(combinerLayoutBindings.size()), combinerLayoutBindings.data());
+
+    pipelineLayouts[typeIdx] = std::make_unique<vpr::PipelineLayout>(device);
+    pipelineLayouts[typeIdx]->Create(1u, &combinerPushConstantRange, 1u, &descriptorSetLayouts[typeIdx]->vkHandle());
+
     combinerShaderModule = std::make_unique<vpr::ShaderModule>(
         device,
         VK_SHADER_STAGE_COMPUTE_BIT,
         combinersCompiledSpvSource,
         static_cast<uint32_t>(sizeof(combinersCompiledSpvSource)));
 
-    auto& combinerPSOs = nodePSOs[static_cast<size_t>(NodeType::Combiner)];
+    auto& combinerPSOs = nodePSOs[typeIdx];
 
     auto combinerSpecValues = combinerSpecializationDefaultVals;
     VkSpecializationInfo combinerSpecInfo = combinerSpecializationInfo;
@@ -171,6 +192,7 @@ void PsoCacheImpl::createCombinerPipelines(const VkDevice device)
 
     VkComputePipelineCreateInfo pipelineInfo = baseComputePipelineInfo;
     pipelineInfo.stage = combinerShaderInfo;
+    pipelineInfo.layout = pipelineLayouts[typeIdx]->vkHandle();
 
     const uint32_t numCombinerNodeTypes = static_cast<uint32_t>(CombinerNodes::Count);
     for (uint32_t i = 0; i < numCombinerNodeTypes; ++i)
@@ -188,13 +210,20 @@ void PsoCacheImpl::createCombinerPipelines(const VkDevice device)
 
 void PsoCacheImpl::createModifierPipelines(const VkDevice device)
 {
+    const size_t typeIdx = static_cast<size_t>(NodeType::Modifier);
+    descriptorSetLayouts[typeIdx] = std::make_unique<vpr::DescriptorSetLayout>(device);
+    descriptorSetLayouts[typeIdx]->AddDescriptorBindings(static_cast<uint32_t>(modifierLayoutBindings.size()), modifierLayoutBindings.data());
+
+    pipelineLayouts[typeIdx] = std::make_unique<vpr::PipelineLayout>(device);
+    pipelineLayouts[typeIdx]->Create(1u, &modifierPushConstantRange, 1u, &descriptorSetLayouts[typeIdx]->vkHandle());
+
     modifierShaderModule = std::make_unique<vpr::ShaderModule>(
         device,
         VK_SHADER_STAGE_COMPUTE_BIT,
         modifiersCompiledSpvSource,
         static_cast<uint32_t>(sizeof(modifiersCompiledSpvSource)));
 
-    auto& modifierPSOs = nodePSOs[static_cast<size_t>(NodeType::Modifier)];
+    auto& modifierPSOs = nodePSOs[typeIdx];
 
     auto modifierSpecValues = modifierSpecializationDefaultVals;
     VkSpecializationInfo modifierSpecInfo = modifierSpecializationInfo;
@@ -213,6 +242,7 @@ void PsoCacheImpl::createModifierPipelines(const VkDevice device)
 
     VkComputePipelineCreateInfo pipelineInfo = baseComputePipelineInfo;
     pipelineInfo.stage = modifierShaderInfo;
+    pipelineInfo.layout = pipelineLayouts[typeIdx]->vkHandle();
 
     const uint32_t numModifierNodeTypes = static_cast<uint32_t>(ModifierNodes::Count);
     for (uint32_t i = 0; i < numModifierNodeTypes; ++i)

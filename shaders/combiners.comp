@@ -7,7 +7,7 @@ layout (constant_id = 0) const uint OperationType = 0;
 layout (constant_id = 1) const uint MaxX = 256;
 layout (constant_id = 2) const uint MaxY = 256;
 layout (constant_id = 3) const uint MaxZ = 1;
-layout (local_size_x = 256, local_size_y = 256, local_size_z = 1) in;
+layout (local_size_x = 32, local_size_y = 32, local_size_z = 1) in;
 
 layout (set = 0, binding = 0, rgba32f) restrict readonly uniform imageBuffer positions;
 layout (set = 0, binding = 1, r32f) restrict readonly uniform imageBuffer input0;

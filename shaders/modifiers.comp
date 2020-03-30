@@ -23,7 +23,7 @@ layout (constant_id = 6) const int MinX = MaxX / 4;
 layout (constant_id = 7) const int MinY = MaxY / 4;
 layout (constant_id = 8) const int MinZ = 0;
 
-layout (local_size_x = 256, local_size_y = 256, local_size_z = 1) in;
+layout (local_size_x = 32, local_size_y = 32, local_size_z = 1) in;
 
 layout (set = 0, binding = 0, rgba32f) restrict readonly uniform imageBuffer positions;
 layout (set = 0, binding = 1, r32f) restrict readonly uniform imageBuffer inputImg;
