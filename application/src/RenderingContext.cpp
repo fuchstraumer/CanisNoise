@@ -105,9 +105,7 @@ std::string objectTypeToString(const VkObjectType type)
         return "VkDisplayModeKHR";
     case VK_OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT:
         return "VkDebugReportCallbackEXT";
-    case VK_OBJECT_TYPE_OBJECT_TABLE_NVX:
-        return "VkObjectTableNVX";
-    case VK_OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NVX:
+    case VK_OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV:
         return "VkIndirectCommandsLayoutNVX";
     case VK_OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT:
         return "VkDebugUtilsMessengerEXT";
