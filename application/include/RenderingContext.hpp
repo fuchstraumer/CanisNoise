@@ -134,7 +134,7 @@ public:
     static int GetInputMode(int mode);
     static const char* GetShaderCacheDir();
     static void SetShaderCacheDir(const char* dir);
-    static VkResult SetObjectName(VkObjectType object_type, uint64_t handle, const char* name);
+    static VkResult SetObjectName(VkObjectType object_type, void* handle, const char* name);
 
 private:
 

@@ -82,7 +82,7 @@ UploadBuffer* ResourceTransferSystem::CreateUploadBuffer(const size_t buffer_sz,
     if constexpr (VTF_VALIDATION_ENABLED && VTF_USE_DEBUG_INFO)
     {
         const std::string upload_buffer_name = std::string("UploadBuffer") + std::to_string(uploadBuffers.size());
-        RenderingContext::SetObjectName(VK_OBJECT_TYPE_BUFFER, (uint64_t)uploadBuffers.back()->Buffer, upload_buffer_name.c_str());
+        RenderingContext::SetObjectName(VK_OBJECT_TYPE_BUFFER, uploadBuffers.back()->Buffer, upload_buffer_name.c_str());
         // if we're in validation mode, might as well check "iter" too. Won't crash, but will log an error
         if (!iter.second)
         {
@@ -167,7 +167,7 @@ void ResourceTransferSystem::Initialize(const vpr::Device * dvc, VmaAllocator _a
     constexpr static VkCommandBufferBeginInfo begin_info{
         VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
         nullptr,
-        VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT | VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT,
+        VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT,
         nullptr
     };
 
@@ -186,9 +186,9 @@ void ResourceTransferSystem::Initialize(const vpr::Device * dvc, VmaAllocator _a
         static const std::string pool_name = base_name + std::string("_CommandPool");
         static const std::string fence_name = base_name + std::string("_Fence");
         static const std::string cmd_buffer_name = base_name + std::string("_CmdBuffer");
-        RenderingContext::SetObjectName(VK_OBJECT_TYPE_COMMAND_POOL, (uint64_t)transferCmdPool->vkHandle(), pool_name.c_str());
-        RenderingContext::SetObjectName(VK_OBJECT_TYPE_FENCE, (uint64_t)fence->vkHandle(), fence_name.c_str());
-        RenderingContext::SetObjectName(VK_OBJECT_TYPE_COMMAND_BUFFER, (uint64_t)transferCmdPool->GetCmdBuffer(0u), cmd_buffer_name.c_str());
+        RenderingContext::SetObjectName(VK_OBJECT_TYPE_COMMAND_POOL, transferCmdPool->vkHandle(), pool_name.c_str());
+        RenderingContext::SetObjectName(VK_OBJECT_TYPE_FENCE, fence->vkHandle(), fence_name.c_str());
+        RenderingContext::SetObjectName(VK_OBJECT_TYPE_COMMAND_BUFFER, transferCmdPool->GetCmdBuffer(0u), cmd_buffer_name.c_str());
     }
 
 }

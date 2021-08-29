@@ -50,9 +50,9 @@ struct gpu_image_resource_data_t {
 
 struct VulkanResource {
     resource_type Type{ resource_type::INVALID };
-    uint64_t Handle{ 0u };
+    void* Handle{ nullptr };
     void* Info{ nullptr };
-    uint64_t ViewHandle{ 0u };
+    void* ViewHandle{ nullptr };
     void* ViewInfo{ nullptr };
     void* UserData{ nullptr };
     VulkanResource* Sampler{ nullptr };

@@ -237,7 +237,7 @@ struct rw_lock_guard
         }
     }
 
-    rw_lock_guard(rw_lock_guard&& other) noexcept : mut(std::move(other.mut)), mode(std::move(other.mode)) {}
+    rw_lock_guard(rw_lock_guard&& other) = delete;
     rw_lock_guard& operator=(rw_lock_guard&& other) = delete;
     rw_lock_guard(const rw_lock_guard&) = delete;
     rw_lock_guard& operator=(const rw_lock_guard&) = delete;

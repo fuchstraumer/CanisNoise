@@ -425,14 +425,14 @@ void RenderingContext::Construct() {
 
     if constexpr (VTF_VALIDATION_ENABLED && VTF_USE_DEBUG_INFO)
     {
-        SetObjectName(VK_OBJECT_TYPE_SWAPCHAIN_KHR, (uint64_t)swapchain->vkHandle(), "RenderingContextSwapchain");
+        SetObjectName(VK_OBJECT_TYPE_SWAPCHAIN_KHR, swapchain->vkHandle(), "RenderingContextSwapchain");
 
         for (size_t i = 0u; i < swapchain->ImageCount(); ++i)
         {
             const std::string view_name = std::string("RenderingContextSwapchain_ImageView") + std::to_string(i);
-            SetObjectName(VK_OBJECT_TYPE_IMAGE_VIEW, (uint64_t)swapchain->ImageView(i), view_name.c_str());
+            SetObjectName(VK_OBJECT_TYPE_IMAGE_VIEW, swapchain->ImageView(i), view_name.c_str());
             const std::string img_name = std::string("RenderingContextSwapchain_Image") + std::to_string(i);
-            SetObjectName(VK_OBJECT_TYPE_IMAGE, (uint64_t)swapchain->Image(i), img_name.c_str());
+            SetObjectName(VK_OBJECT_TYPE_IMAGE, swapchain->Image(i), img_name.c_str());
         }
     }
 
@@ -651,7 +651,7 @@ void RenderingContext::SetShaderCacheDir(const char* dir)
     ctxt.shaderCacheDir = dir;
 }
 
-VkResult RenderingContext::SetObjectName(VkObjectType object_type, uint64_t handle, const char* name)
+VkResult RenderingContext::SetObjectName(VkObjectType object_type, void* handle, const char* name)
 {
     if constexpr (VTF_VALIDATION_ENABLED && VTF_USE_DEBUG_INFO)
     {
@@ -676,7 +676,7 @@ VkResult RenderingContext::SetObjectName(VkObjectType object_type, uint64_t hand
                 VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT,
                 nullptr,
                 object_type,
-                handle,
+                reinterpret_cast<uint64_t>(handle),
                 object_name_str.c_str()
             };
 
@@ -688,7 +688,7 @@ VkResult RenderingContext::SetObjectName(VkObjectType object_type, uint64_t hand
                 VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT,
                 nullptr,
                 object_type,
-                handle,
+                reinterpret_cast<uint64_t>(handle),
                 name
             };
             return ctxt.SetObjectNameFn(ctxt.logicalDevice->vkHandle(), &name_info);
